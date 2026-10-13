@@ -126,7 +126,13 @@ select#colorby{border:var(--b);border-radius:4px;padding:7px 10px;background:var
 .why{font-size:14px;margin-top:8px}
 .bohr{margin:6px auto 4px;max-width:230px}
 .bohr svg{width:100%;height:auto;display:block}
-.bohr .cap{text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.bohr-key{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:4px;font-size:13px}
+.bohr-key li{position:relative;padding-left:22px;line-height:1.45}
+.bohr-key i{position:absolute;left:2px;top:4px;width:10px;height:10px;border-radius:50%}
+.bohr-key i[style*="14px"]{left:0;top:2px}
+.layers{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.layers span{border:1px solid var(--grid);border-radius:4px;padding:1px 8px;font-family:var(--mono);font-size:12px;background:var(--accent-soft)}
+.layers b{color:var(--accent);margin-right:4px}
 .shell{transform-box:view-box;transform-origin:center;animation:spin linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion: reduce){.shell{animation:none}.el,.btn,.drawer{transition:none}}
@@ -554,7 +560,15 @@ function bohr(e, size=230){
     s += `</g>`;
   });
   s += `<circle cx="${c}" cy="${c}" r="${r0-6}" fill="var(--nucleus)"/><text x="${c}" y="${c+5}" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="14" fill="#fff">+${e.z}</text></svg>`;
-  return `<div class="bohr">${s}<div class="cap">Lớp: ${sh.join(" · ")} · <span style="color:var(--hot)">●</span> e lớp ngoài cùng</div></div>`;
+  const LAYER = "KLMNOPQ";
+  return `<div class="bohr">${s}</div>
+    <ul class="bohr-key">
+      <li><i style="background:var(--nucleus);width:14px;height:14px"></i>Hạt nhân: <b>+${e.z}</b> là điện tích hạt nhân (${e.z} proton)</li>
+      ${sh.length>1?`<li><i style="background:var(--accent)"></i>Electron ở các lớp bên trong</li>`:""}
+      <li><i style="background:var(--hot)"></i>Electron lớp ngoài cùng: <b>${sh[sh.length-1]} e</b>, quyết định tính chất hoá học</li>
+      <li><i style="background:none;border:1.5px solid #C7CFDA"></i>Vòng tròn: lớp electron (${sh.length} lớp = chu kì ${e.p})</li>
+    </ul>
+    <div class="layers">${sh.map((n,i)=>`<span><b>${LAYER[i]}</b>${n}e</span>`).join("")}</div>`;
 }
 
 /* ---------- QR ---------- */
