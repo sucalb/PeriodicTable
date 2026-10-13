@@ -6,14 +6,15 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <style>
-/* Layout: top bar → heading + progress → section tabs → [table panel | sticky element panel] → trend chart → 6 profile sheets → QR cards → big questions.
-   Deliberately single light theme: a bright classroom "lab sheet" look with ink outlines and pastel blocks. */
+/* Layout: top bar → title → toolbar → full-width textbook-style table (A headers on top, B headers dropped to period 3, oxide rows under) → legend + trend notes. Clicking a cell slides the application drawer in from the right.
+   Deliberately single light theme, modelled on the printed Vietnamese classroom table: s green, p pink, d yellow. */
 :root{
   color-scheme:light;
-  --bg:#FDF3F8; --surface:#FFFFFF; --ink:#1C1218; --muted:#6B5563; --hair:#F0D9E5;
-  --purple:#C2187A; --purple-soft:#FBE3EF; --yellow:#FFE347; --hot:#2E8B3E; --nucleus:#D27A00; --good:#13895F; --bad:#D2362A;
-  --s:#F9C9DF; --p:#D5EFC4; --d:#FFE7B0;
-  --metal:#FFD9B8; --nonmetal:#D5EFC4; --noble:#D6DCF7;
+  --bg:#F4F6F9; --surface:#FFFFFF; --ink:#1B1D22; --muted:#5A6170; --hair:#DCE2EA; --grid:#3A3D44;
+  --accent:#1C5BA8; --accent-soft:#E7F0FA; --purple:var(--accent); --purple-soft:var(--accent-soft);
+  --yellow:#FFE347; --hot:#D8322A; --nucleus:#D27A00; --good:#13895F; --bad:#D2362A;
+  --s:#B6DF7F; --p:#F7B4D1; --d:#F4EF7A;
+  --metal:#FFD6A5; --nonmetal:#BFE3F5; --noble:#D9CCF5;
   --display:"Lexend", "Be Vietnam Pro", system-ui, sans-serif;
   --body:"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -24,135 +25,115 @@
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6}
 h1,h2,h3,h4{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0;font-weight:600}
 p{margin:0}
-a{color:var(--purple)}
+a{color:var(--accent)}
 button,select{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 mark{background:var(--yellow);color:var(--ink);padding:0 3px}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
-/* top bar */
 .topbar{border-bottom:var(--b);background:var(--surface)}
-.topbar .in{max-width:1240px;margin:0 auto;padding:12px 16px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center}
+.topbar .in{max-width:1320px;margin:0 auto;padding:12px 16px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center}
 .brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:20px;text-decoration:none;color:var(--ink)}
 .brand .box{border:2px solid var(--ink);padding:0 8px;line-height:1.4;font-family:var(--mono);font-weight:700}
 .topbar .sub{color:var(--muted);font-size:14px;flex:1 1 280px;min-width:0}
 .btn{display:inline-flex;align-items:center;gap:6px;border:var(--b);background:var(--surface);border-radius:4px;padding:8px 16px;font-weight:600;font-family:var(--display);cursor:pointer;text-decoration:none;color:var(--ink);transition:transform .12s,box-shadow .12s}
 .btn:hover{transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
-.btn.primary{background:var(--purple);border-color:var(--purple);color:#fff}
-.btn.primary:hover{box-shadow:3px 3px 0 var(--ink)}
 .btn.sm{padding:5px 10px;font-size:13px}
 
-.wrap{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:28px 64px}
-.hero{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between}
-.hero h1{font-size:clamp(34px,5vw,52px);color:var(--purple);font-weight:700;letter-spacing:-.01em}
-.hero .lede{color:var(--muted);font-size:17px;max-width:58ch;margin-top:6px}
-.progress{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px;font-family:var(--mono);font-size:14px;font-weight:500}
-.bar{width:180px;height:14px;border:var(--b);border-radius:999px;overflow:hidden;background:var(--surface)}
+.wrap{max-width:1320px;margin:0 auto;padding-inline:16px;padding-block:24px 64px}
+.hero h1{font-size:clamp(30px,4.4vw,46px);color:var(--accent);font-weight:700;letter-spacing:-.01em}
+.hero .lede{color:var(--muted);font-size:17px;max-width:62ch;margin-top:6px}
+.toolbar{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;margin:20px 0 12px}
+.toolbar label{font-family:var(--display);font-weight:600;margin-right:10px}
+select#colorby{border:var(--b);border-radius:4px;padding:7px 10px;background:var(--surface);font-family:var(--display);cursor:pointer}
+.progress{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--mono);font-size:13px}
+.bar{width:150px;height:12px;border:var(--b);border-radius:999px;overflow:hidden;background:var(--surface)}
 .bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(135deg,var(--ink) 0 3px,transparent 3px 6px);transition:width .4s}
-.hero-tags{display:flex;flex-wrap:wrap;gap:8px}
-.tagbox{border:var(--b);background:var(--surface);border-radius:4px;padding:4px 10px;font-family:var(--mono);font-size:13px}
 
-/* tabs */
-nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;border-bottom:var(--b);margin-top:26px}
-nav.tabs a{display:flex;align-items:center;gap:8px;white-space:nowrap;text-decoration:none;color:var(--ink);font-family:var(--display);font-weight:500;font-size:16px;padding:12px 14px;border-bottom:4px solid transparent;margin-bottom:-1.5px}
-nav.tabs a:hover{background:var(--purple-soft)}
-nav.tabs a.on{border-bottom-color:var(--purple);font-weight:600}
-nav.tabs .dot{width:18px;height:18px;border-radius:50%;background:var(--yellow);border:1.5px solid var(--ink);display:inline-grid;place-items:center;font-size:11px;line-height:1}
+/* table */
+.sheet{background:var(--surface);border:var(--b);padding:12px}
+.tbl-scroll{overflow-x:auto;scrollbar-width:none}
+.tbl-scroll::-webkit-scrollbar{display:none}
+.ptable{display:grid;grid-template-columns:44px repeat(18,minmax(58px,1fr));gap:2px;min-width:1120px}
+.gh{display:flex;align-items:flex-end;justify-content:center;font-family:var(--display);font-weight:600;font-size:17px;color:var(--accent);padding-bottom:2px}
+.gh.b{align-self:end;border-bottom:2px solid var(--accent)}
+.ph{display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:24px;color:var(--accent);border-right:2px solid var(--accent)}
+.el{position:relative;min-height:92px;border:1px solid var(--grid);background:var(--surface);cursor:pointer;display:grid;grid-template-rows:auto auto auto auto 1fr;padding:0;text-align:left;transition:transform .1s,box-shadow .1s,opacity .2s;font-family:var(--body);line-height:1.15}
+.el:hover{transform:translateY(-2px);box-shadow:0 4px 0 -1px var(--grid);z-index:2}
+.el .top{display:flex;justify-content:space-between;align-items:baseline;padding:2px 4px 0;font-size:11px}
+.el .top b{font-family:var(--mono);font-size:12px}
+.el .top em{font-style:normal;font-family:var(--mono);font-size:10px}
+.el .mid{display:flex;justify-content:space-between;align-items:center;padding:0 4px}
+.el .s{font-family:var(--display);font-weight:700;font-size:clamp(18px,1.7vw,24px);line-height:1.05}
+.el .en{font-family:var(--mono);font-size:10px;color:#3a3d44}
+.el .nm{font-size:10.5px;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.el .cf{font-family:var(--mono);font-size:9.5px;padding:1px 4px 2px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.el .ox{border-top:1px solid var(--grid);background:var(--surface);font-family:var(--mono);font-size:9px;text-align:center;align-self:end;padding:1px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.el .star{color:var(--hot);font-size:10px;margin-left:2px}
+.el.sel{outline:3px solid var(--ink);outline-offset:-1px;z-index:3;box-shadow:4px 4px 0 var(--ink)}
+.el.dim{opacity:.2}
+.key{grid-column:4/14;grid-row:2/4;display:flex;align-items:center;justify-content:center;gap:18px;padding:6px}
+.key .el{width:120px;min-height:118px;cursor:default;background:var(--p)}
+.key .el:hover{transform:none;box-shadow:none}
+.key .el .s{font-size:32px}
+.key .el .nm{font-size:12px}
+.key .el .cf{font-size:11px}
+.key ul{list-style:none;margin:0;padding:0;font-size:12.5px;display:grid;gap:3px;color:var(--muted)}
+.key ul b{color:var(--ink);font-family:var(--mono);font-weight:700}
+.oxl{display:flex;align-items:center;justify-content:center;font-size:10px;line-height:1.15;text-align:center;color:var(--muted);border-right:2px solid var(--accent)}
+.oxc{display:flex;align-items:center;justify-content:center;font-family:var(--body);font-size:16px;padding:4px 0;border-top:1px solid var(--hair)}
+.oxc.a{color:var(--hot);font-weight:600}
+.oxc.h{color:var(--accent);font-weight:600;border-top:0}
 
-section{padding-top:28px;scroll-margin-top:64px}
-.eyebrow{font-family:var(--mono);font-size:14px;color:var(--muted)}
-.sec-title{font-size:clamp(22px,3vw,30px);font-weight:700;margin:2px 0 6px}
-.sec-lede{color:var(--muted);max-width:66ch;margin-bottom:18px}
-.panel{background:var(--surface);border:var(--b);border-radius:2px;padding:18px}
+.below{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:16px;margin-top:16px}
+.legend{display:grid;gap:0;border:var(--b);align-self:start}
+.legend div{padding:8px 12px;font-size:14px;border-bottom:1px solid var(--grid)}
+.legend div:last-child{border-bottom:0;background:var(--surface);color:var(--muted);font-size:13px}
+.trends{display:grid;gap:10px;align-content:start}
+.trend{border:var(--b);background:var(--surface);padding:10px 14px;font-size:14px}
+.trend h3{font-size:15px;margin-bottom:6px;color:var(--accent)}
+.trend .row{display:flex;flex-wrap:wrap;gap:6px 18px}
+.trend .row span{white-space:nowrap}
+.up{color:var(--hot);font-weight:700}
+.dn{color:var(--accent);font-weight:700}
+.arrowbar{height:3px;background:var(--hot);position:relative;margin:4px 14px 8px 0}
+.arrowbar::after{content:"";position:absolute;right:-12px;top:-5px;border:6.5px solid transparent;border-left:12px solid var(--hot)}
+.hint{color:var(--muted);font-size:13px;margin-top:10px}
 
-/* lab grid */
-.lab{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:20px;align-items:start}
-.lab > *{min-width:0}
-.side{display:grid;gap:16px;position:sticky;top:16px}
-.info{max-height:calc(100vh - 150px);overflow-y:auto}
-.info-head{display:flex;gap:14px;align-items:center;padding-bottom:12px;border-bottom:var(--b)}
-.info-head .bigtile{width:76px}.info-head .bigtile .s{font-size:28px}
-.tagline{font-size:14px;color:var(--purple);font-weight:600;margin-top:2px}
-.blk h4{display:flex;align-items:center;gap:8px}
+/* drawer */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);background:var(--surface);border-left:var(--b);box-shadow:-10px 0 30px rgb(0 0 0 / .14);transform:translateX(105%);transition:transform .25s ease;overflow-y:auto;z-index:20;padding:calc(14px + env(safe-area-inset-top,0px)) 18px calc(28px + env(safe-area-inset-bottom,0px))}
+.drawer.open{transform:none}
+.drawer .close{position:sticky;top:0;float:right;width:36px;height:36px;border:var(--b);border-radius:4px;background:var(--surface);font-size:20px;line-height:1;cursor:pointer;z-index:1}
+.info-head{display:flex;gap:14px;align-items:center;padding-bottom:12px;border-bottom:var(--b);margin-right:44px}
+.bigtile{width:78px;flex:0 0 auto;border:1px solid var(--grid);background:var(--c);padding:4px 6px;text-align:center}
+.bigtile .z{font-family:var(--mono);font-size:12px}
+.bigtile .s{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.05}
+.bigtile .nm{font-size:11px}.bigtile .v{font-family:var(--mono);font-size:11px}
+.info-head h3{font-size:20px}
+.info-head .cat{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:2px}
+.tagline{font-size:14px;color:var(--hot);font-weight:600;margin-top:2px}
+.blk{margin-top:16px}
+.blk h4{display:flex;align-items:center;gap:8px;font-size:15px;margin-bottom:6px}
 .blk h4 .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--yellow);border:1.5px solid var(--ink);font-family:var(--mono);font-size:11px}
+.blk p{font-size:14px}
 .pics{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin:6px 0 10px}
-.pic{border:var(--b);border-radius:4px;background:var(--purple-soft);display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;color:var(--purple);font-size:12px;font-weight:600;text-align:center}
+.pic{border:var(--b);border-radius:4px;background:var(--accent-soft);display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;color:var(--accent);font-size:12px;font-weight:600;text-align:center}
 .pic svg{width:40px;height:40px}
 .pic span{color:var(--ink)}
 .uses{margin:0;padding-left:18px;font-size:14px;display:grid;gap:3px}
 .why{font-size:14px;margin-top:8px}
-.side .panel.info h3{font-size:20px;margin:0}
-.side .panel h3{font-size:20px;margin-bottom:10px}
-select#colorby{width:100%;border:var(--b);border-radius:2px;padding:10px 12px;background:var(--surface);font-size:16px;font-family:var(--display);cursor:pointer}
-
-.tbl-scroll{overflow-x:auto;scrollbar-width:none}
-.tbl-scroll::-webkit-scrollbar{display:none}
-.ptable{display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:4px}
-@media (max-width:700px){.ptable{min-width:620px}}
-.glabel{text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);align-self:end;white-space:nowrap}
-.el{position:relative;aspect-ratio:1/1.02;border:1.5px solid transparent;border-radius:3px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px;transition:transform .12s,border-color .12s,opacity .2s}
-.el:hover{border-color:var(--ink);transform:translateY(-2px)}
-.el .z{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1}
-.el .s{font-family:var(--display);font-weight:600;font-size:clamp(15px,1.8vw,22px);line-height:1.1}
-.el .v{font-family:var(--mono);font-size:9px;color:var(--ink);line-height:1;height:9px}
-.el.sel{border:2.5px solid var(--ink);box-shadow:3px 3px 0 var(--ink);transform:translate(-1px,-1px)}
-.el .seen{position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:var(--ink)}
-.el .star{position:absolute;top:2px;left:3px;font-size:9px;line-height:1;color:var(--purple)}
-.el.dim{opacity:.18}
-.keycell{grid-column:3/13;grid-row:2/4;display:flex;align-items:center;gap:14px;padding:4px 8px;min-width:0}
-.keybig{flex:0 0 auto;width:84px;border:var(--b);border-radius:3px;background:var(--p);padding:6px 8px;text-align:center}
-.keybig .z{font-family:var(--mono);font-size:12px}
-.keybig .s{font-family:var(--display);font-weight:700;font-size:30px;line-height:1.05}
-.keybig .nm{font-size:11px}
-.keylist{list-style:none;margin:0;padding:0;font-size:12px;display:grid;gap:2px;color:var(--muted);min-width:0}
-.keylist b{color:var(--ink)}
-.legend{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;margin-top:14px;font-size:14px;color:var(--muted)}
-.legend i{display:inline-block;width:16px;height:12px;vertical-align:-1px;margin-right:6px}
-.gradbar{display:inline-block;width:160px;height:12px;border:1px solid var(--hair);background:linear-gradient(90deg,#fff,color-mix(in oklab,var(--purple) 62%,#fff))}
-.rule{margin-top:14px;padding-top:12px;border-top:1px dashed var(--hair);font-size:14px}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.chip{border:var(--b);background:var(--surface);border-radius:4px;padding:5px 12px;font-size:14px;cursor:pointer;font-family:var(--display)}
-.chip[aria-pressed="true"]{background:var(--ink);color:#fff}
-.chip .n{font-family:var(--mono);opacity:.6;margin-left:4px;font-size:12px}
-
-/* element info panel */
-.info h3{font-size:22px}
-.info .cat{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:2px}
-.bohr{margin:10px auto 4px;max-width:250px}
+.bohr{margin:6px auto 4px;max-width:230px}
 .bohr svg{width:100%;height:auto;display:block}
 .bohr .cap{text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted)}
 .shell{transform-box:view-box;transform-origin:center;animation:spin linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion: reduce){.shell{animation:none}.el,.btn{transition:none}}
+@media (prefers-reduced-motion: reduce){.shell{animation:none}.el,.btn,.drawer{transition:none}}
 .facts{margin:10px 0 0;display:grid}
-.facts div{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--hair)}
-.facts dt{color:var(--muted)}
-.facts dd{margin:0;font-family:var(--mono);text-align:right;overflow-wrap:anywhere;min-width:0}
-.facts .cfg{flex-direction:column;gap:2px}
-.facts .cfg dd{text-align:left;font-size:13px}
-.blk{margin-top:14px}
-.blk h4{font-size:15px;margin-bottom:4px}
-.blk p{font-size:14px}
-.blk p + p{margin-top:6px}
-.domains{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.domains span{font-size:12px;border:1px solid var(--ink);border-radius:999px;padding:1px 9px}
-.info-nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-.empty{text-align:center;padding:28px 8px}
-.empty .tap{display:inline-grid;place-items:center;width:64px;height:64px;border:var(--b);border-radius:6px;background:var(--purple-soft);font-family:var(--display);font-weight:700;font-size:26px;color:var(--purple);margin-bottom:12px}
-.empty h3{margin-bottom:6px}
-.empty p{color:var(--muted);font-size:14px;max-width:32ch;margin:0 auto}
-.quick{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px}
-.qrrow{display:flex;gap:12px;align-items:center;margin-top:14px}
-.qrrow p{font-size:13px;color:var(--muted)}
-.qr{background:#fff;border:var(--b);padding:5px;line-height:0;flex:0 0 auto}
-.qr svg{width:92px;height:92px}
-.tip{background:var(--surface);border:var(--b);border-radius:14px;padding:16px 18px}
-.tip h3{font-size:18px;margin-bottom:6px}
-.tip p{font-size:15px}
-.tip p + p{color:var(--muted);margin-top:8px}
-
-/* quiz */
-.quiz{border:var(--b);border-radius:4px;padding:12px 14px;display:grid;gap:8px;background:var(--purple-soft)}
+.facts div{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--hair)}
+.facts dt{color:var(--muted);font-size:14px}
+.facts dd{margin:0;font-family:var(--mono);font-size:13px;text-align:right;overflow-wrap:anywhere;min-width:0}
+.safety{font-size:13px;margin-top:8px;padding:6px 10px;background:#FFF6CC;border-left:4px solid var(--yellow)}
+.quiz{border:var(--b);border-radius:4px;padding:12px 14px;display:grid;gap:8px;background:var(--accent-soft)}
 .quiz .qt{font-weight:600;font-size:14px}
 .opts{display:grid;gap:6px}
 .opt{text-align:left;border:1.5px solid var(--ink);background:var(--surface);border-radius:4px;padding:7px 10px;cursor:pointer;font-size:14px}
@@ -161,130 +142,64 @@ select#colorby{width:100%;border:var(--b);border-radius:2px;padding:10px 12px;ba
 .opt.no{background:#FBDCD8;border-color:var(--bad)}
 .opt:disabled{cursor:default}
 .fb{font-size:14px}
+.qrrow{display:flex;gap:12px;align-items:center;margin-top:16px}
+.qrrow p{font-size:13px;color:var(--muted)}
+.qr{background:#fff;border:var(--b);padding:5px;line-height:0;flex:0 0 auto}
+.qr svg{width:92px;height:92px}
+.info-nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 
-/* chart */
-.chart-scroll{overflow-x:auto}
-.chart-scroll svg{display:block;width:100%;height:auto;min-width:560px}
-.seg{display:inline-flex;border:var(--b);border-radius:4px;overflow:hidden;margin-bottom:14px}
-.seg button{border:0;background:var(--surface);padding:7px 14px;cursor:pointer;font-family:var(--display);font-weight:500}
-.seg button + button{border-left:var(--b)}
-.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
-.trend-notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:14px}
-.trend-notes div{border:var(--b);background:var(--surface);border-radius:4px;padding:12px 14px;font-size:14px}
-.trend-notes b{display:block;font-family:var(--display);font-size:16px;font-weight:600;margin-bottom:4px}
-
-/* profiles */
-.ptabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-.ptabs button{display:flex;align-items:center;gap:8px;border:var(--b);background:var(--surface);border-radius:4px;padding:6px 12px 6px 6px;cursor:pointer;font-family:var(--display);font-weight:500}
-.ptabs button b{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:3px;font-weight:700;background:var(--c)}
-.ptabs button[aria-pressed="true"]{background:var(--ink);color:#fff}
-.ptabs button[aria-pressed="true"] b{color:var(--ink)}
-.sheet{background:var(--surface);border:var(--b);border-radius:2px}
-.sheet-top{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:18px 20px;border-bottom:var(--b)}
-.bigtile{width:88px;flex:0 0 auto;border:var(--b);border-radius:3px;background:var(--c);padding:6px 8px;text-align:center}
-.bigtile .z{font-family:var(--mono);font-size:12px}
-.bigtile .s{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.05}
-.bigtile .nm{font-size:11px}
-.bigtile .v{font-family:var(--mono);font-size:11px}
-.sheet-top h3{font-size:28px;font-weight:700}
-.sheet-top .tg{color:var(--muted)}
-.sheet-top .ico{margin-left:auto;width:60px;height:60px;color:var(--purple)}
-.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
-.f{padding:14px 20px;border-bottom:1px solid var(--hair);min-width:0}
-.f .k{display:flex;gap:8px;align-items:baseline;font-family:var(--display);font-weight:600;font-size:14px;margin-bottom:4px}
-.f .k .num{font-family:var(--mono);color:var(--purple);font-weight:700}
-.f.wide{grid-column:1/-1}
-.f ul{margin:0;padding-left:18px}
-.f.explain{background:var(--purple-soft)}
-.f.explain .k .num{background:var(--yellow);color:var(--ink);padding:0 4px}
-.extras{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;padding:18px 20px}
-.extras h4{font-size:16px;margin-bottom:6px}
-.safety{font-size:13px;margin-top:8px;padding:6px 10px;background:#FFF6CC;border-left:4px solid var(--yellow)}
-.script{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:14px}
-.script li{display:grid;grid-template-columns:64px 1fr;gap:8px}
-.script .mono{color:var(--purple);font-size:12px;padding-top:2px;font-weight:700}
-
-/* QR */
-.qrgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-.qrcard{display:flex;gap:12px;align-items:center;background:var(--surface);border:var(--b);border-radius:2px;padding:12px}
-.qrcard .bigtile{width:80px}.qrcard .bigtile .s{font-size:28px}
-.qrcard .qr svg{width:104px;height:104px}
-
-/* big questions */
-.bigq{display:grid;gap:10px}
-details.q{background:var(--surface);border:var(--b);border-radius:2px;padding:0 18px}
-details.q summary{cursor:pointer;padding:14px 0;font-family:var(--display);font-weight:600;font-size:17px;list-style:none;display:flex;gap:12px;align-items:center}
-details.q summary::-webkit-details-marker{display:none}
-details.q summary .num{display:inline-grid;place-items:center;width:28px;height:28px;flex:0 0 auto;border-radius:50%;background:var(--yellow);border:1.5px solid var(--ink);font-family:var(--mono);font-size:13px}
-details.q summary::after{content:"+";margin-left:auto;font-family:var(--mono);font-size:20px}
-details.q[open] summary::after{content:"−"}
-details.q .ans{padding:0 0 16px 40px;display:grid;gap:8px;max-width:80ch}
-
-footer{margin-top:56px;padding-top:18px;border-top:var(--b);color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
-
-@media (max-width:980px){
-  .lab{grid-template-columns:minmax(0,1fr)}
-  .side{position:static}
-  .info{max-height:none;overflow:visible}
-}
-@media (max-width:560px){
-  .sheet-top .ico{display:none}
-  details.q .ans{padding-left:0}
-  .topbar .sub{display:none}
-}
-@media print{
-  nav.tabs,.topbar .btn,.info-nav,.ptabs{display:none!important}
-  .sheet[hidden]{display:block!important}
-  .lab{grid-template-columns:minmax(0,1fr)}
-  .side{position:static}
-  .ptable{min-width:0}
-  .shell{animation:none}
-}
+footer{margin-top:40px;padding-top:16px;border-top:var(--b);color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+@media (max-width:820px){ .below{grid-template-columns:minmax(0,1fr)} .topbar .sub{display:none} }
 </style>
 
 <header class="topbar"><div class="in">
-  <a class="brand" href="#bang"><span class="box">36</span>Bảng tuần hoàn đời sống</a>
-  <span class="sub">Hoá học 10 · Chủ đề 2 · Bảng tuần hoàn tương tác</span>
+  <a class="brand" href="#"><span class="box">36</span>Bảng tuần hoàn đời sống</a>
+  <span class="sub">Hoá học 10 · Bảng tuần hoàn tương tác</span>
 </div></header>
 
 <main class="wrap">
   <div class="hero">
-    <div>
-      <h1>Bảng tuần hoàn đời sống</h1>
-      <p class="lede">Bấm vào một ô nguyên tố để xem ứng dụng của nó trong đời sống: hình ảnh, video, mô hình nguyên tử, thí nghiệm và câu hỏi.</p>
-      <div class="progress"><span>Đã khám phá <b id="seen-n">0</b>/36 nguyên tố</span><span class="bar"><i id="seen-bar"></i></span></div>
+    <h1>Bảng tuần hoàn các nguyên tố hoá học</h1>
+    <p class="lede">Bấm vào một ô nguyên tố để xem ứng dụng của nó trong đời sống: hình ảnh, video, mô hình nguyên tử, thí nghiệm và câu hỏi.</p>
+  </div>
+
+  <div class="toolbar">
+    <div><label for="colorby">Tô màu theo</label>
+      <select id="colorby">
+        <option value="block">Khối nguyên tố s, p, d</option>
+        <option value="cat">Kim loại, phi kim, khí hiếm</option>
+        <option value="life">Nguyên tố quanh ta</option>
+      </select>
+    </div>
+    <div class="progress"><span>Đã khám phá <b id="seen-n">0</b>/36</span><span class="bar"><i id="seen-bar"></i></span></div>
+  </div>
+  <div id="domchips" class="toolbar" style="margin-top:0;justify-content:flex-start;gap:6px" hidden></div>
+
+  <div class="sheet">
+    <div class="tbl-scroll"><div class="ptable" id="ptable"></div></div>
+  </div>
+
+  <div class="below">
+    <div class="legend" id="legend"></div>
+    <div class="trends">
+      <div class="trend"><h3>Từ đầu đến cuối chu kì (Z tăng)</h3><div class="arrowbar"></div>
+        <div class="row"><span>Bán kính R <b class="dn">↘</b></span><span>Độ âm điện χ <b class="up">↗</b></span><span>Tính kim loại <b class="dn">↘</b></span><span>Tính phi kim <b class="up">↗</b></span><span>Hoá trị trong oxit cao nhất 1 → 7</span><span>Hoá trị với hiđro 4 → 1</span><span>Tính bazơ <b class="dn">↘</b>, tính axit <b class="up">↗</b></span></div></div>
+      <div class="trend"><h3>Từ trên xuống dưới trong nhóm A</h3>
+        <div class="row"><span>Số lớp e <b class="up">↗</b></span><span>Bán kính R <b class="up">↗</b></span><span>Độ âm điện χ <b class="dn">↘</b></span><span>Tính kim loại <b class="up">↗</b></span><span>Tính phi kim <b class="dn">↘</b></span></div></div>
+      <p class="hint"><span class="up">↗</span> tăng · <span class="dn">↘</span> giảm · <span style="color:var(--hot)">★</span> nguyên tố có thí nghiệm · Dùng phím ← → để chuyển nguyên tố, Esc để đóng.</p>
     </div>
   </div>
 
-
-  <section id="bang">
-    <h2 class="sec-title">Bảng tuần hoàn tương tác</h2>
-    <div class="lab">
-      <div class="panel">
-        <div class="tbl-scroll"><div class="ptable" id="ptable"></div></div>
-        <div class="legend" id="legend"></div>
-        <div class="chips" id="domchips" hidden></div>
-        <div class="rule" id="rule" hidden></div>
-      </div>
-      <aside class="side" id="side">
-        <div class="panel">
-          <h3><label for="colorby">Tô màu theo</label></h3>
-          <select id="colorby">
-            <option value="block">Khối nguyên tố s, p, d</option>
-            <option value="cat">Kim loại, phi kim, khí hiếm</option>
-            <option value="life">Nguyên tố quanh ta</option>
-          </select>
-        </div>
-        <div class="panel info" id="info"></div>
-      </aside>
-    </div>
-  </section>
-
   <footer>
     <span>Không chỉ học bảng tuần hoàn, hãy biến bảng tuần hoàn thành câu chuyện của cuộc sống.</span>
-    <span>Số liệu: nguyên tử khối theo IUPAC · độ âm điện thang Pauling · bán kính cộng hoá trị (pm).</span>
+    <span>Nguyên tử khối theo IUPAC · độ âm điện thang Pauling.</span>
   </footer>
 </main>
+
+<aside class="drawer" id="drawer" aria-label="Thông tin nguyên tố" aria-hidden="true">
+  <button class="close" id="drawer-close" aria-label="Đóng">×</button>
+  <div id="info"></div>
+</aside>
 
 <script>
 // Địa chỉ trang đã đăng, để mã QR trỏ đúng; để trống thì dùng địa chỉ hiện tại.
@@ -451,81 +366,85 @@ const PROFILES = {
 };
 const PROF_ORDER=["O","Na","Cl","Ca","Fe","Cu"];
 
-const VI = {H:"hiđro",He:"heli",Li:"liti",C:"cacbon",N:"nitơ",O:"oxi",F:"flo",Na:"natri",Mg:"magie",Al:"nhôm",Si:"silic",P:"photpho",S:"lưu huỳnh",Cl:"clo",K:"kali",Ca:"canxi",Cr:"crom",Mn:"mangan",Fe:"sắt",Co:"coban",Ni:"niken",Cu:"đồng",Zn:"kẽm",As:"asen",Br:"brom"};
+// Tên tiếng Việt quen dùng (in trên ô) và số oxi hoá thường gặp
+const VN = {H:"Hiđro",He:"Heli",Li:"Liti",Be:"Beri",B:"Bo",C:"Cacbon",N:"Nitơ",O:"Oxi",F:"Flo",Ne:"Neon",Na:"Natri",Mg:"Magie",Al:"Nhôm",Si:"Silic",P:"Photpho",S:"Lưu huỳnh",Cl:"Clo",Ar:"Agon",K:"Kali",Ca:"Canxi",Sc:"Scandi",Ti:"Titan",V:"Vanadi",Cr:"Crom",Mn:"Mangan",Fe:"Sắt",Co:"Coban",Ni:"Niken",Cu:"Đồng",Zn:"Kẽm",Ga:"Gali",Ge:"Gemani",As:"Asen",Se:"Selen",Br:"Brom",Kr:"Kripton"};
+const OX = {H:"−1, +1",He:"",Li:"+1",Be:"+2",B:"+3",C:"−4, +2, +4",N:"−3, +1…+5",O:"−2, −1",F:"−1",Ne:"",Na:"+1",Mg:"+2",Al:"+3",Si:"−4, +4",P:"−3, +3, +5",S:"−2, +4, +6",Cl:"−1, +1…+7",Ar:"",K:"+1",Ca:"+2",Sc:"+3",Ti:"+2, +3, +4",V:"+2…+5",Cr:"+2, +3, +6",Mn:"+2, +4, +7",Fe:"+2, +3",Co:"+2, +3",Ni:"+2, +3",Cu:"+1, +2",Zn:"+2",Ga:"+3",Ge:"+2, +4",As:"−3, +3, +5",Se:"−2, +4, +6",Br:"−1, +1…+7",Kr:"+2"};
+const OXIDE = ["","R₂O","RO","R₂O₃","RO₂","R₂O₅","RO₃","R₂O₇","RO₄","","","R₂O","RO","R₂O₃","RO₂","R₂O₅","RO₃","R₂O₇",""];
+const HYD = {14:"RH₄",15:"RH₃",16:"H₂R",17:"HR"};
+const VI = Object.fromEntries(Object.entries(VN).map(([k,v]) => [k, v.toLowerCase()]));
 const blockOf = e => (e.z===2||e.g<=2) ? "s" : (e.g<=12 ? "d" : "p");
 const BLOCK_VN = {s:"Nguyên tố s", p:"Nguyên tố p", d:"Nguyên tố d"};
 const fillOf = (e,m) => m==="block" ? `var(--${blockOf(e)})` : ({m:"var(--metal)",n:"var(--nonmetal)",g:"var(--noble)"})[e.cat];
-const fullName = e => e.name + (VI[e.sym] && VI[e.sym].toLowerCase()!==e.name.toLowerCase() ? ` (${VI[e.sym]})` : "");
+const fullName = e => `${e.name} (${VI[e.sym]})`;
+const cfgCell = e => e.z<=2 ? config(e.z) : configShort(e.z).replace(/ /g,"");
 
 /* ---------- Tiến độ khám phá ---------- */
 let seen = new Set();
-try{ seen = new Set(JSON.parse(localStorage.getItem("ptdx-seen")||"[]")); }catch(err){}
+try{ seen = new Set(JSON.parse(localStorage.getItem("ptdx-seen")||"[]").filter(s => s in bySym)); }catch(err){}
 function markSeen(sym){
-  seen.add(sym);
+  if(sym) seen.add(sym);
   try{ localStorage.setItem("ptdx-seen", JSON.stringify([...seen])); }catch(err){}
   document.getElementById("seen-n").textContent = seen.size;
   document.getElementById("seen-bar").style.width = (seen.size/36*100)+"%";
-  const b = tbl.querySelector(`.el[data-sym="${sym}"]`);
-  if(b && !b.querySelector(".seen")) b.insertAdjacentHTML("beforeend",'<i class="seen" aria-hidden="true"></i>');
 }
 
 /* ---------- Bảng ---------- */
 const tbl = document.getElementById("ptable");
 let mode = "block", domSel = null, cur = null;
+function cellInner(e){
+  return `<span class="top"><b>${e.z}${PROFILES[e.sym]?'<span class="star" aria-hidden="true">★</span>':""}</b><em>${vn(e.mass)}</em></span>
+    <span class="mid"><span class="s">${e.sym}</span><span class="en">${e.en==null?"":vn(e.en,2)}</span></span>
+    <span class="nm">${VN[e.sym]}</span><span class="cf">${cfgCell(e)}</span><span class="ox">${OX[e.sym]||"&nbsp;"}</span>`;
+}
 (function build(){
   let h = "";
-  for(let g=1; g<=18; g++) h += `<div class="glabel" style="grid-column:${g};grid-row:1">${GROUP_VN[g]}</div>`;
-  h += `<div class="keycell"><div class="keybig"><div class="z">8</div><div class="s">O</div><div class="nm">Oxygen</div></div>
-    <ul class="keylist"><li><b>8</b> số hiệu nguyên tử Z = số proton</li><li><b>O</b> kí hiệu hoá học</li><li>Hàng ngang = <b>chu kì</b> = số lớp e</li><li>Cột = <b>nhóm</b> · ★ có thí nghiệm</li></ul></div>`;
-  for(const e of els) h += `<button class="el" id="el-${e.sym}" data-sym="${e.sym}" style="grid-column:${e.g};grid-row:${e.p+1}" title="${fullName(e)}" aria-label="${fullName(e)}, Z = ${e.z}">
-    <span class="z">${e.z}</span><span class="s">${e.sym}</span><span class="v"></span>${PROFILES[e.sym]?'<span class="star" aria-hidden="true">★</span>':""}</button>`;
+  for(const g of [1,2,13,14,15,16,17,18]) h += `<div class="gh" style="grid-column:${g+1};grid-row:1">${GROUP_VN[g]}</div>`;
+  for(const g of [3,4,5,6,7,11,12]) h += `<div class="gh b" style="grid-column:${g+1};grid-row:4">${GROUP_VN[g]}</div>`;
+  h += `<div class="gh b" style="grid-column:9/12;grid-row:4">VIIIB</div>`;
+  for(let p=1;p<=4;p++) h += `<div class="ph" style="grid-column:1;grid-row:${p+1}">${p}</div>`;
+  const al = bySym.Al;
+  h += `<div class="key"><div class="el" aria-hidden="true">${cellInner(al)}</div>
+    <ul><li><b>13</b> số hiệu nguyên tử · <b>26,98</b> nguyên tử khối</li><li><b>Al</b> kí hiệu · <b>1,61</b> độ âm điện</li><li><b>Nhôm</b> tên nguyên tố</li><li><b>[Ne]3s²3p¹</b> cấu hình electron</li><li><b>+3</b> số oxi hoá thường gặp</li></ul></div>`;
+  for(const e of els) h += `<button class="el" id="el-${e.sym}" data-sym="${e.sym}" style="grid-column:${e.g+1};grid-row:${e.p+1}" aria-label="${fullName(e)}, Z = ${e.z}">${cellInner(e)}</button>`;
+  h += `<div class="oxl" style="grid-column:1;grid-row:6">Oxit cao nhất</div><div class="oxl" style="grid-column:1;grid-row:7">Hợp chất khí với H</div>`;
+  for(let g=1; g<=18; g++){
+    if(g===9||g===10) continue;
+    const a = g<=2||g>=13;
+    h += `<div class="oxc${a?" a":""}" style="grid-column:${g===8?"9/12":g+1};grid-row:6">${OXIDE[g]}</div>`;
+    if(HYD[g]) h += `<div class="oxc h" style="grid-column:${g+1};grid-row:7">${HYD[g]}</div>`;
+  }
   tbl.innerHTML = h;
 })();
-tbl.addEventListener("click", ev => { const b = ev.target.closest(".el"); if(b) select(b.dataset.sym, {scroll: matchMedia("(max-width:980px)").matches}); });
+tbl.addEventListener("click", ev => { const b = ev.target.closest("button.el"); if(b) select(b.dataset.sym); });
 document.getElementById("colorby").addEventListener("change", ev => { mode = ev.target.value; if(mode!=="life") domSel = null; render(); });
 
 const chips = document.getElementById("domchips");
-chips.innerHTML = Object.entries(DOM).map(([k,v]) => `<button class="chip" id="dom-${k}" data-d="${k}" aria-pressed="false">${v}<span class="n">${els.filter(e=>e.dom.includes(k)).length}</span></button>`).join("");
-chips.addEventListener("click", ev => { const b = ev.target.closest(".chip"); if(!b) return; domSel = domSel===b.dataset.d ? null : b.dataset.d; render(); });
+chips.innerHTML = Object.entries(DOM).map(([k,v]) => `<button class="btn sm" id="dom-${k}" data-d="${k}" aria-pressed="false">${v} · ${els.filter(e=>e.dom.includes(k)).length}</button>`).join("");
+chips.addEventListener("click", ev => { const b = ev.target.closest("[data-d]"); if(!b) return; domSel = domSel===b.dataset.d ? null : b.dataset.d; render(); });
 
-const RULES = {
-  block:"Khối được đặt tên theo phân lớp chứa electron cuối cùng: <b>s</b> (nhóm IA, IIA và He), <b>p</b> (nhóm IIIA → VIIIA), <b>d</b> (kim loại chuyển tiếp, nhóm B).",
-  cat:"Kim loại nằm bên trái và giữa bảng, phi kim ở góc trên bên phải, khí hiếm ở cột cuối. Đường ranh giới chạy chéo qua B, Si, Ge, As.",
-  life:"Chọn một lĩnh vực để xem những nguyên tố có mặt ở đó, rồi bấm vào ô để đọc <mark>vì sao</mark> nguyên tố ấy đảm nhận vai trò đó.",
-  en:"<b>Độ âm điện</b> (thang Pauling) đo khả năng hút electron. Màu đậm dần từ trái sang phải trong một chu kì, nhạt dần từ trên xuống trong một nhóm A. Khí hiếm (để trắng) không xét.",
-  r:"<b>Bán kính nguyên tử</b> (pm): màu đậm là nguyên tử lớn. K lớn nhất (203 pm) vì mở đầu chu kì 4 với 4 lớp electron; bán kính giảm dần dọc mỗi chu kì."
-};
 function render(){
-  const heat = mode==="en"||mode==="r";
-  const vals = mode==="en" ? els.map(e=>e.en).filter(v=>v!=null) : els.map(e=>e.r);
-  const lo = Math.min(...vals), hi = Math.max(...vals);
-  for(const b of tbl.querySelectorAll(".el")){
-    const e = bySym[b.dataset.sym], v = b.querySelector(".v");
+  for(const b of tbl.querySelectorAll("button.el")){
+    const e = bySym[b.dataset.sym];
+    b.style.background = fillOf(e, mode==="life" ? "cat" : mode);
     b.classList.toggle("dim", mode==="life" && !!domSel && !e.dom.includes(domSel));
-    if(heat){
-      const x = mode==="en" ? e.en : e.r;
-      if(x==null){ b.style.background="var(--surface)"; b.style.outline="1px dashed var(--hair)"; v.textContent="—"; }
-      else { const t=(x-lo)/(hi-lo); b.style.outline=""; b.style.background=`color-mix(in oklab, var(--purple) ${Math.round(4+t*58)}%, #fff)`; v.textContent = mode==="en" ? vn(x,2) : x; }
-    } else { b.style.outline=""; b.style.background = fillOf(e, mode==="life"?"cat":mode); v.textContent=""; }
   }
   chips.hidden = mode!=="life";
-  chips.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.d===domSel));
+  chips.querySelectorAll("[data-d]").forEach(c => { const on = c.dataset.d===domSel; c.setAttribute("aria-pressed", on); c.style.background = on ? "var(--ink)" : ""; c.style.color = on ? "#fff" : ""; });
   const lg = document.getElementById("legend");
-  if(mode==="block") lg.innerHTML = ["s","p","d"].map(k=>`<span><i style="background:var(--${k})"></i>${BLOCK_VN[k]}</span>`).join("");
-  else if(mode==="cat"||mode==="life") lg.innerHTML = `<span><i style="background:var(--metal)"></i>Kim loại</span><span><i style="background:var(--nonmetal)"></i>Phi kim</span><span><i style="background:var(--noble)"></i>Khí hiếm</span>`;
-  else lg.innerHTML = `<span class="mono">${mode==="en"?vn(lo,2):lo+" pm"}</span><span class="gradbar"></span><span class="mono">${mode==="en"?vn(hi,2):hi+" pm"}</span>`;
-  const r = document.getElementById("rule"); r.hidden = false; r.innerHTML = RULES[mode];
+  lg.innerHTML = mode==="block"
+    ? `<div style="background:var(--s)">IA, IIA, He: khối các nguyên tố s</div><div style="background:var(--p)">IIIA → VIIIA: khối các nguyên tố p</div><div style="background:var(--d)">IB → VIIIB: khối các nguyên tố d</div><div>Khối được đặt theo phân lớp chứa electron cuối cùng.</div>`
+    : `<div style="background:var(--metal)">Kim loại</div><div style="background:var(--nonmetal)">Phi kim</div><div style="background:var(--noble)">Khí hiếm</div><div>${mode==="life" ? "Chọn một lĩnh vực ở trên để lọc các nguyên tố có mặt ở đó." : "Ranh giới kim loại – phi kim chạy chéo qua B, Si, Ge, As."}</div>`;
 }
 
 /* ---------- Mô hình nguyên tử ---------- */
-function bohr(e, size=250){
-  const sh = shells(e.z), c = size/2, r0 = 30, gap = (c-r0-10)/sh.length;
+function bohr(e, size=230){
+  const sh = shells(e.z), c = size/2, r0 = 28, gap = (c-r0-10)/sh.length;
   let s = `<svg viewBox="0 0 ${size} ${size}" role="img" aria-label="Mô hình nguyên tử ${e.name}: các lớp ${sh.join(", ")}">`;
   sh.forEach((n,i) => {
     const r = r0 + gap*(i+1) - 4, outer = i===sh.length-1;
-    s += `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#E2C6D4" stroke-width="1.2"/>`;
+    s += `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#C7CFDA" stroke-width="1.2"/>`;
     s += `<g class="shell" style="animation-duration:${14+i*7}s${i%2?";animation-direction:reverse":""}">`;
-    for(let k=0;k<n;k++){ const a = 2*Math.PI*k/n - Math.PI/2; s += `<circle cx="${(c+r*Math.cos(a)).toFixed(2)}" cy="${(c+r*Math.sin(a)).toFixed(2)}" r="4.2" fill="${outer?"var(--hot)":"var(--purple)"}"/>`; }
+    for(let k=0;k<n;k++){ const a = 2*Math.PI*k/n - Math.PI/2; s += `<circle cx="${(c+r*Math.cos(a)).toFixed(2)}" cy="${(c+r*Math.sin(a)).toFixed(2)}" r="4.2" fill="${outer?"var(--hot)":"var(--accent)"}"/>`; }
     s += `</g>`;
   });
   s += `<circle cx="${c}" cy="${c}" r="${r0-6}" fill="var(--nucleus)"/><text x="${c}" y="${c+5}" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="14" fill="#fff">+${e.z}</text></svg>`;
@@ -560,22 +479,22 @@ document.addEventListener("click", ev => {
   fb.innerHTML = (j===ans ? `<b style="color:var(--good)">Chính xác!</b> ` : `<b style="color:var(--bad)">Chưa đúng.</b> `) + box.querySelector("template").innerHTML;
 });
 
-/* ---------- Khung ứng dụng nguyên tố ---------- */
+/* ---------- Khung ứng dụng (trượt từ phải) ---------- */
 const DOM_ICON = {
   nuoc: ICON.drop, dien: ICON.plug, congtrinh: ICON.bridge, coth: ICON.lungs,
   congnghe: '<rect x="19" y="6" width="26" height="52" rx="5"/><path d="M28 50h8M25 14h14"/>',
   cayxanh: '<path d="M14 52C14 27 30 12 53 12c0 25-15 40-39 40z"/><path d="M14 52l22-22"/>'
 };
-const info = document.getElementById("info");
+const drawer = document.getElementById("drawer"), info = document.getElementById("info");
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
-function tile(e){ return `<div class="bigtile" style="--c:${fillOf(e,"block")}"><div class="z">${e.z}</div><div class="s">${e.sym}</div><div class="nm">${e.name}</div><div class="v">${vn(e.mass)}</div></div>`; }
+function tile(e){ return `<div class="bigtile" style="--c:${fillOf(e,"block")}"><div class="z">${e.z}</div><div class="s">${e.sym}</div><div class="nm">${VN[e.sym]}</div><div class="v">${vn(e.mass)}</div></div>`; }
 function select(sym, opts={}){
   const e = bySym[sym]; if(!e) return; cur = sym;
   tbl.querySelectorAll(".el.sel").forEach(x => x.classList.remove("sel"));
   document.getElementById("el-"+sym).classList.add("sel");
   const P = PROFILES[sym], prev = els[(e.z+34)%36], next = els[e.z%36];
   const uses = P ? P.use : e.app.replace(/\.$/,"").split("; ").map(cap);
-  const video = "https://www.youtube.com/results?search_query=" + encodeURIComponent(`${e.name} ${VI[e.sym]||""} ứng dụng hoá học`);
+  const video = "https://www.youtube.com/results?search_query=" + encodeURIComponent(`${VI[e.sym]} ${e.name} ứng dụng hoá học`);
   info.innerHTML = `
     <div class="info-head">${tile(e)}<div style="min-width:0"><h3>${fullName(e)}</h3>
       <div class="cat">${CAT_VN[e.cat]} · Ô ${e.z} · Chu kì ${e.p} · Nhóm ${GROUP_VN[e.g]}</div>${P?`<div class="tagline">${P.tag}</div>`:""}</div></div>
@@ -586,50 +505,53 @@ function select(sym, opts={}){
       <p class="why"><mark>Vì sao?</mark> ${e.why}</p></div>
 
     <div class="blk"><h4><span class="n">2</span>Video 30–60 giây</h4>
-      <a class="btn sm" href="${video}" target="_blank" rel="noopener">▶ Xem video về ${e.name}</a></div>
+      <a class="btn sm" href="${video}" target="_blank" rel="noopener">▶ Xem video về ${VI[e.sym]}</a></div>
 
     <div class="blk"><h4><span class="n">3</span>Mô hình nguyên tử</h4>${bohr(e)}
       <dl class="facts">
         <div><dt>Nguyên tử khối</dt><dd>${vn(e.mass)}</dd></div>
-        <div class="cfg"><dt>Cấu hình electron</dt><dd>${config(e.z)}${e.z>2?`<br><span style="color:var(--muted)">${configShort(e.z)}</span>`:""}</dd></div>
+        <div><dt>Độ âm điện</dt><dd>${e.en==null?"—":vn(e.en,2)}</dd></div>
+        <div><dt>Cấu hình electron</dt><dd>${config(e.z)}</dd></div>
+        <div><dt>Số oxi hoá</dt><dd>${OX[e.sym]||"—"}</dd></div>
       </dl>
-      <p class="why" style="margin-top:8px">${posToProp(e)}</p></div>
+      <p class="why">${posToProp(e)}</p></div>
 
     ${P?`<div class="blk"><h4><span class="n">4</span>Thí nghiệm</h4><p>${P.exp}</p><p class="safety">${P.safe}</p></div>`:""}
 
     <div class="blk"><h4><span class="n">${P?5:4}</span>Câu hỏi tương tác</h4>${quizHTML([P?P.quiz[0]:autoQuiz(e)], "i"+e.sym)}</div>
 
-    <div class="qrrow"><div class="qr">${qrSVG(e.sym)}</div><p>Quét mã QR để mở ${e.name} trên điện thoại. In mã và dán cạnh ô ${e.z} trên bảng.</p></div>
+    <div class="qrrow"><div class="qr">${qrSVG(e.sym)}</div><p>Quét mã QR để mở ${VI[e.sym]} trên điện thoại. In mã và dán cạnh ô ${e.z} trên bảng.</p></div>
     <div class="info-nav">
       <button class="btn sm" id="info-prev">← ${prev.sym}</button>
       <button class="btn sm" id="info-next">${next.sym} →</button>
     </div>`;
   info.querySelector("#info-prev").onclick = () => select(prev.sym);
   info.querySelector("#info-next").onclick = () => select(next.sym);
-  info.scrollTop = 0;
+  drawer.classList.add("open"); drawer.setAttribute("aria-hidden","false"); drawer.scrollTop = 0;
   markSeen(sym);
   if(!opts.quiet) try{ history.replaceState(null, "", "#"+sym); }catch(err){}
-  if(opts.scroll) document.getElementById("side").scrollIntoView({behavior:"smooth", block:"start"});
 }
+function closeDrawer(){
+  drawer.classList.remove("open"); drawer.setAttribute("aria-hidden","true");
+  tbl.querySelectorAll(".el.sel").forEach(x => x.classList.remove("sel"));
+  const last = cur; cur = null;
+  try{ history.replaceState(null, "", location.pathname + location.search); }catch(err){}
+  if(last) document.getElementById("el-"+last).focus({preventScroll:true});
+}
+document.getElementById("drawer-close").addEventListener("click", closeDrawer);
 document.addEventListener("keydown", ev => {
   if(ev.target.closest("input,select,textarea")) return;
-  if(!cur){ if(ev.key==="ArrowRight"||ev.key==="ArrowLeft") select(ev.key==="ArrowRight"?"H":"Kr"); return; }
+  if(ev.key==="Escape" && cur) return closeDrawer();
+  if(ev.key!=="ArrowRight" && ev.key!=="ArrowLeft") return;
+  if(!cur) return select(ev.key==="ArrowRight" ? "H" : "Kr");
   const e = bySym[cur];
-  if(ev.key==="ArrowRight") select(els[e.z%36].sym);
-  if(ev.key==="ArrowLeft") select(els[(e.z+34)%36].sym);
+  select(ev.key==="ArrowRight" ? els[e.z%36].sym : els[(e.z+34)%36].sym);
 });
 
-
-function showEmpty(){
-  info.innerHTML = `<div class="empty"><div class="tap" aria-hidden="true">?</div><h3>Chọn một nguyên tố</h3>
-    <p>Bấm vào một ô bất kì trên bảng để xem ứng dụng của nguyên tố đó trong đời sống.</p>
-    <div class="quick">${["O","Na","Fe","Cu"].map(x=>`<button class="btn sm" data-q="${x}">${x} · ${fullName(bySym[x])}</button>`).join("")}</div></div>`;
-  info.querySelectorAll("[data-q]").forEach(b => b.onclick = () => select(b.dataset.q));
-}
 /* ---------- Khởi động ---------- */
-seen.forEach(s => { if(bySym[s]) markSeen(s); });
+markSeen(null);
 render();
 const start = location.hash.slice(1);
-if(bySym[start]) select(start, {quiet:true, scroll:true}); else showEmpty();
-window.addEventListener("hashchange", () => { const s = location.hash.slice(1); if(bySym[s] && s!==cur) select(s, {quiet:true, scroll:true}); });
+if(bySym[start]) select(start, {quiet:true});
+window.addEventListener("hashchange", () => { const s = location.hash.slice(1); if(bySym[s] && s!==cur) select(s, {quiet:true}); });
 </script>
