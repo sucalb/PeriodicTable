@@ -13,7 +13,7 @@
   --bg:#F4F6F9; --surface:#FFFFFF; --ink:#1B1D22; --muted:#5A6170; --hair:#DCE2EA; --grid:#3A3D44;
   --accent:#1C5BA8; --accent-soft:#E7F0FA; --purple:var(--accent); --purple-soft:var(--accent-soft);
   --yellow:#FFE347; --hot:#D8322A; --nucleus:#D27A00; --good:#13895F; --bad:#D2362A;
-  --s:#B6DF7F; --p:#F7B4D1; --d:#F4EF7A;
+  --s:#B6DF7F; --p:#F7B4D1; --d:#F4EF7A; --f:#FFDDB0;
   --metal:#FFD6A5; --nonmetal:#BFE3F5; --noble:#D9CCF5;
   --display:"Lexend", "Be Vietnam Pro", system-ui, sans-serif;
   --body:"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -67,7 +67,9 @@ select#colorby{border:var(--b);border-radius:4px;padding:7px 10px;background:var
 .el .s{font-family:var(--display);font-weight:700;font-size:clamp(18px,1.7vw,24px);line-height:1.05}
 .el .en{font-family:var(--mono);font-size:10px;color:#3a3d44}
 .el .nm{font-size:10.5px;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.el .cf{font-family:var(--mono);font-size:9.5px;padding:1px 4px 2px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.el .cf{font-family:var(--mono);font-size:9px;line-height:1.15;padding:1px 3px 2px;text-align:center;overflow-wrap:anywhere}
+.fl{display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-family:var(--display);font-weight:600;font-size:15px;color:var(--accent);text-align:right}
+.fl b{color:var(--hot);margin-right:4px}
 .el .ox{border-top:1px solid var(--grid);background:var(--surface);font-family:var(--mono);font-size:9px;text-align:center;align-self:end;padding:1px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .el .star{color:var(--hot);font-size:10px;margin-left:2px}
 .el.sel{outline:3px solid var(--ink);outline-offset:-1px;z-index:3;box-shadow:4px 4px 0 var(--ink)}
@@ -153,7 +155,7 @@ footer{margin-top:40px;padding-top:16px;border-top:var(--b);color:var(--muted);f
 </style>
 
 <header class="topbar"><div class="in">
-  <a class="brand" href="#"><span class="box">36</span>Bảng tuần hoàn đời sống</a>
+  <a class="brand" href="#"><span class="box">118</span>Bảng tuần hoàn đời sống</a>
   <span class="sub">Hoá học 10 · Bảng tuần hoàn tương tác</span>
 </div></header>
 
@@ -171,7 +173,7 @@ footer{margin-top:40px;padding-top:16px;border-top:var(--b);color:var(--muted);f
         <option value="life">Nguyên tố quanh ta</option>
       </select>
     </div>
-    <div class="progress"><span>Đã khám phá <b id="seen-n">0</b>/36</span><span class="bar"><i id="seen-bar"></i></span></div>
+    <div class="progress"><span>Đã khám phá <b id="seen-n">0</b>/118</span><span class="bar"><i id="seen-bar"></i></span></div>
   </div>
   <div id="domchips" class="toolbar" style="margin-top:0;justify-content:flex-start;gap:6px" hidden></div>
 
@@ -186,7 +188,7 @@ footer{margin-top:40px;padding-top:16px;border-top:var(--b);color:var(--muted);f
         <div class="row"><span>Bán kính R <b class="dn">↘</b></span><span>Độ âm điện χ <b class="up">↗</b></span><span>Tính kim loại <b class="dn">↘</b></span><span>Tính phi kim <b class="up">↗</b></span><span>Hoá trị trong oxit cao nhất 1 → 7</span><span>Hoá trị với hiđro 4 → 1</span><span>Tính bazơ <b class="dn">↘</b>, tính axit <b class="up">↗</b></span></div></div>
       <div class="trend"><h3>Từ trên xuống dưới trong nhóm A</h3>
         <div class="row"><span>Số lớp e <b class="up">↗</b></span><span>Bán kính R <b class="up">↗</b></span><span>Độ âm điện χ <b class="dn">↘</b></span><span>Tính kim loại <b class="up">↗</b></span><span>Tính phi kim <b class="dn">↘</b></span></div></div>
-      <p class="hint"><span class="up">↗</span> tăng · <span class="dn">↘</span> giảm · <span style="color:var(--hot)">★</span> nguyên tố có thí nghiệm · Dùng phím ← → để chuyển nguyên tố, Esc để đóng.</p>
+      <p class="hint"><span class="up">↗</span> tăng · <span class="dn">↘</span> giảm · <span style="color:var(--hot)">★</span> nguyên tố có thí nghiệm · Nguyên tử khối trong ngoặc vuông [ ] là của đồng vị bền nhất (nguyên tố phóng xạ). Dùng phím ← → để chuyển nguyên tố, Esc để đóng.</p>
     </div>
   </div>
 
@@ -244,7 +246,89 @@ const E = [
 ["As","Arsenic",74.92,"n",2.18,119,["nuoc"],"Cảnh báo: nước giếng khoan nhiễm asen ở đồng bằng sông Hồng; bán dẫn GaAs.","Hợp chất As rất độc, tích luỹ lâu dài gây bệnh → nước ngầm phải được lọc trước khi dùng."],
 ["Se","Selenium",78.97,"n",2.55,120,["coth","congnghe"],"Vi chất chống oxi hoá trong cơ thể; trống quang máy photocopy.","Se dẫn điện tốt hơn khi được chiếu sáng (quang dẫn)."],
 ["Br","Bromine",79.90,"n",2.96,120,["congnghe"],"Chất chống cháy trong vỏ nhựa đồ điện tử; thuốc ảnh cũ (AgBr).","Cùng nhóm VIIA với Cl; là phi kim duy nhất ở thể lỏng ở nhiệt độ phòng."],
-["Kr","Krypton",83.80,"g",null,116,["congnghe"],"Đèn flash chụp ảnh; khí giữa hai lớp kính cách nhiệt.","Khí hiếm trơ, nặng và dẫn nhiệt kém."]
+["Kr","Krypton",83.80,"g",null,116,["congnghe"],"Đèn flash chụp ảnh; khí giữa hai lớp kính cách nhiệt.","Khí hiếm trơ, nặng và dẫn nhiệt kém."],
+["Rb","Rubidium",85.47,"m",0.82,null,["congnghe"],"Đồng hồ nguyên tử rubiđi trong vệ tinh GPS; tế bào quang điện.","Kim loại kiềm rất dễ nhường 1 e; dao động của nguyên tử Rb rất ổn định nên dùng để đo thời gian chính xác."],
+["Sr","Strontium",87.62,"m",0.95,null,["congnghe"],"Pháo hoa màu đỏ; sơn dạ quang phát sáng trong bóng tối.","Muối stronti khi đốt cho ngọn lửa đỏ thẫm đặc trưng (thử màu ngọn lửa)."],
+["Y","Yttrium",88.91,"m",1.22,null,["congnghe","coth"],"Đèn LED trắng (YAG); laser Nd:YAG dùng trong thẩm mĩ, phẫu thuật mắt.","Tinh thể hợp chất ytri bền, làm nền để các ion khác phát sáng."],
+["Zr","Zirconium",91.22,"m",1.33,null,["congnghe","coth"],"Vỏ thanh nhiên liệu lò phản ứng hạt nhân; răng sứ zirconia; dao gốm.","Bền nhiệt, chống ăn mòn và hầu như không hấp thụ neutron."],
+["Nb","Niobium",92.91,"m",1.6,null,["congnghe","congtrinh"],"Nam châm siêu dẫn trong máy MRI; thép làm đường ống dẫn khí.","Hợp kim Nb–Ti trở thành siêu dẫn ở nhiệt độ rất thấp."],
+["Mo","Molybdenum",95.95,"m",2.16,null,["congtrinh","cayxanh"],"Thép chịu nhiệt, mũi khoan; phân vi lượng giúp cây họ đậu cố định đạm.","Nóng chảy ở 2623 °C; Mo nằm trong enzyme cố định nitơ của vi khuẩn nốt sần."],
+["Tc","Technetium","[98]","m",1.9,null,["coth"],"Chất đánh dấu phóng xạ Tc-99m chụp xạ hình xương, tim, tuyến giáp.","Nguyên tố nhân tạo nhẹ nhất; Tc-99m phát tia gamma và phân rã nhanh (khoảng 6 giờ) nên ít hại cho người bệnh."],
+["Ru","Ruthenium",101.07,"m",2.2,null,["congnghe"],"Lớp ghi dữ liệu của ổ cứng; mạ tiếp điểm điện; chất xúc tác.","Kim loại quý cứng, bền, chống mài mòn."],
+["Rh","Rhodium",102.91,"m",2.28,null,["congnghe"],"Bộ chuyển đổi xúc tác khí thải ô tô; mạ trang sức sáng bóng.","Là chất xúc tác chuyển khí NOₓ độc thành N₂."],
+["Pd","Palladium",106.42,"m",2.2,null,["congnghe"],"Bộ xúc tác khí thải xe máy, ô tô; trang sức vàng trắng; tụ điện.","Hấp thụ hiđro rất mạnh và là chất xúc tác tốt."],
+["Ag","Silver",107.87,"m",1.93,null,["dien","coth"],"Trang sức, đồ bạc; tiếp điểm điện; băng gạc kháng khuẩn có nano bạc.","Dẫn điện tốt nhất trong các kim loại; ion Ag⁺ diệt vi khuẩn."],
+["Cd","Cadmium",112.41,"m",1.69,null,["dien"],"Pin Ni–Cd; chất màu vàng cho sơn. Rất độc, đang bị hạn chế sử dụng.","Cd²⁺ tích luỹ trong thận gây bệnh nên pin cũ phải được thu gom đúng cách."],
+["In","Indium",114.82,"m",1.78,null,["congnghe"],"Lớp ITO trong suốt dẫn điện của màn hình cảm ứng điện thoại.","Oxit inđi–thiếc vừa trong suốt vừa dẫn điện."],
+["Sn","Tin",118.71,"m",1.96,null,["congnghe","congtrinh"],"Thiếc hàn mạch điện; sắt tây làm vỏ đồ hộp; đồng thiếc.","Nóng chảy ở nhiệt độ thấp (232 °C), không độc, bảo vệ sắt khỏi gỉ."],
+["Sb","Antimony",121.76,"m",2.05,null,["congnghe","dien"],"Chất chống cháy trong nhựa; hợp kim chì–antimon trong ắc quy.","Làm chì cứng hơn; hợp chất antimon hạn chế lửa cháy lan."],
+["Te","Tellurium",127.6,"n",2.1,null,["congnghe"],"Pin mặt trời màng mỏng CdTe; đĩa quang ghi lại được.","Hợp chất của telu là chất bán dẫn hấp thụ ánh sáng tốt."],
+["I","Iodine",126.9,"n",2.66,null,["coth"],"Muối iot phòng bệnh bướu cổ; cồn iot sát trùng vết thương.","Tuyến giáp cần iot để tạo hormone; I₂ có tính oxi hoá nên diệt khuẩn."],
+["Xe","Xenon",131.29,"g",2.6,null,["congnghe","coth"],"Đèn pha xenon ô tô; động cơ ion của tàu vũ trụ; khí gây mê.","Khí hiếm nặng, khi phóng điện cho ánh sáng trắng rất mạnh."],
+["Cs","Caesium",132.91,"m",0.79,null,["congnghe"],"Đồng hồ nguyên tử xesi, dùng để định nghĩa đơn vị giây.","Kim loại hoạt động mạnh nhất trong các nguyên tố bền; dao động của nguyên tử Cs dùng định nghĩa 1 giây."],
+["Ba","Barium",137.33,"m",0.89,null,["coth","congnghe"],"Thuốc cản quang BaSO₄ khi chụp X-quang dạ dày; pháo hoa màu xanh lục.","BaSO₄ không tan nên không độc và chặn được tia X; muối bari tan thì rất độc."],
+["La","Lanthanum",138.91,"m",1.1,null,["congnghe"],"Thấu kính máy ảnh; pin Ni-MH của xe hybrid; đá lửa bật lửa.","La₂O₃ làm thuỷ tinh có chiết suất cao; mở đầu dãy lantan."],
+["Ce","Cerium",140.12,"m",1.12,null,["congnghe"],"Đá lửa bật lửa; bột đánh bóng kính; bộ lọc khí thải.","Hợp kim xeri bắn tia lửa khi cọ xát; CeO₂ có thể nhận và nhả oxi."],
+["Pr","Praseodymium",140.91,"m",1.13,null,["congnghe"],"Nam châm mạnh; kính bảo hộ thợ hàn; tạo màu vàng cho gốm sứ.","Ion Pr³⁺ hấp thụ ánh sáng vàng chói của ngọn lửa hàn."],
+["Nd","Neodymium",144.24,"m",1.14,null,["congnghe","dien"],"Nam châm NdFeB trong loa, tai nghe, động cơ xe điện, tua-bin gió.","Tạo ra nam châm vĩnh cửu mạnh nhất hiện nay."],
+["Pm","Promethium","[145]","m",1.13,null,["khoahoc"],"Pin hạt nhân cỡ nhỏ; máy đo độ dày vật liệu.","Không có đồng vị bền, mọi đồng vị đều phóng xạ."],
+["Sm","Samarium",150.36,"m",1.17,null,["congnghe","coth"],"Nam châm SmCo chịu nhiệt; thuốc Sm-153 giảm đau ung thư xương.","Nam châm samari giữ từ tính ở nhiệt độ cao."],
+["Eu","Europium",151.96,"m",1.2,null,["congnghe"],"Chất phát quang đỏ trong màn hình, đèn huỳnh quang; mực chống giả tiền euro.","Ion Eu³⁺ phát ánh sáng đỏ khi bị kích thích."],
+["Gd","Gadolinium",157.25,"m",1.2,null,["coth"],"Thuốc cản quang khi chụp cộng hưởng từ MRI.","Gd³⁺ có 7 electron độc thân (4f⁷) nên từ tính mạnh, làm ảnh MRI rõ hơn."],
+["Tb","Terbium",158.93,"m",1.1,null,["congnghe"],"Chất phát quang xanh lá trong màn hình, đèn tiết kiệm điện.","Ion Tb³⁺ phát ánh sáng xanh lá."],
+["Dy","Dysprosium",162.5,"m",1.22,null,["congnghe"],"Thêm vào nam châm neođim để chịu nhiệt trong động cơ xe điện.","Giúp nam châm không mất từ tính khi nóng."],
+["Ho","Holmium",164.93,"m",1.23,null,["coth"],"Laser holmi dùng tán sỏi thận; nam châm tạo từ trường mạnh.","Có từ tính rất mạnh trong các nguyên tố."],
+["Er","Erbium",167.26,"m",1.24,null,["congnghe"],"Bộ khuếch đại tín hiệu trong cáp quang Internet; kính màu hồng.","Ion Er³⁺ khuếch đại ánh sáng đúng bước sóng truyền trong cáp quang."],
+["Tm","Thulium",168.93,"m",1.25,null,["coth"],"Máy X-quang cầm tay; laser phẫu thuật.","Đồng vị Tm-170 phát tia X năng lượng thấp."],
+["Yb","Ytterbium",173.05,"m",1.1,null,["congnghe"],"Đồng hồ nguyên tử thế hệ mới; laser cắt kim loại.","Nguyên tử Yb dao động cực kì ổn định."],
+["Lu","Lutetium",174.97,"m",1.27,null,["coth"],"Thuốc Lu-177 điều trị ung thư; xúc tác lọc dầu.","Kết thúc dãy lantan; Lu-177 phát tia beta tiêu diệt tế bào ung thư."],
+["Hf","Hafnium",178.49,"m",1.3,null,["congnghe"],"Thanh điều khiển lò phản ứng hạt nhân; lớp cách điện trong chip vi xử lý.","Hấp thụ neutron mạnh; HfO₂ cách điện tốt trong transistor."],
+["Ta","Tantalum",180.95,"m",1.5,null,["congnghe","coth"],"Tụ điện trong điện thoại, laptop; ốc vít cấy ghép xương.","Lớp Ta₂O₅ rất mỏng cách điện tốt; không phản ứng với cơ thể."],
+["W","Tungsten",183.84,"m",2.36,null,["congnghe","congtrinh"],"Dây tóc bóng đèn sợi đốt; mũi khoan, lưỡi cắt (WC).","Có nhiệt độ nóng chảy cao nhất trong các kim loại (3422 °C)."],
+["Re","Rhenium",186.21,"m",1.9,null,["congnghe"],"Cánh tua-bin động cơ máy bay phản lực; xúc tác lọc hoá dầu.","Chịu được nhiệt độ rất cao mà không biến dạng."],
+["Os","Osmium",190.23,"m",2.2,null,["congnghe"],"Ngòi bút cao cấp; trục kim la bàn.","Kim loại có khối lượng riêng lớn nhất (22,6 g/cm³), rất cứng."],
+["Ir","Iridium",192.22,"m",2.2,null,["congnghe"],"Bugi đánh lửa ô tô; quả cân chuẩn kilogam cũ (Pt–Ir).","Kim loại chống ăn mòn tốt nhất."],
+["Pt","Platinum",195.08,"m",2.28,null,["coth","congnghe"],"Trang sức; bộ xúc tác khí thải; thuốc chống ung thư cisplatin; điện cực.","Rất bền, không gỉ và là chất xúc tác tuyệt vời."],
+["Au","Gold",196.97,"m",2.54,null,["dien","congnghe"],"Trang sức, dự trữ tài chính; mạ chân tiếp xúc chip, thẻ SIM.","Kém hoạt động nên không bị oxi hoá, luôn sáng; dẫn điện tốt, rất dễ dát mỏng."],
+["Hg","Mercury",200.59,"m",2.0,null,["congnghe"],"Nhiệt kế, huyết áp kế (cũ); đèn huỳnh quang. Hơi thuỷ ngân rất độc.","Kim loại duy nhất ở thể lỏng ở nhiệt độ phòng; khi vỡ nhiệt kế cần rắc bột lưu huỳnh để thu gom (Hg + S → HgS)."],
+["Tl","Thallium",204.38,"m",1.62,null,["coth"],"Chụp xạ hình tim (Tl-201). Hợp chất tali rất độc.","Ion Tl⁺ giống K⁺ nên được tế bào cơ tim hấp thụ."],
+["Pb","Lead",207.2,"m",2.33,null,["dien","coth"],"Ắc quy xe máy, ô tô; tấm chắn tia X trong phòng chụp X-quang.","Nặng, đặc nên chặn tia phóng xạ tốt; chì độc nên xăng pha chì đã bị cấm."],
+["Bi","Bismuth",208.98,"m",2.02,null,["coth","congtrinh"],"Thuốc dạ dày chứa bismut; hợp kim dễ nóng chảy trong vòi phun chữa cháy tự động.","Hợp kim bismut nóng chảy ở nhiệt độ thấp, làm vòi phun tự mở khi có cháy."],
+["Po","Polonium","[209]","m",2.0,null,["khoahoc"],"Bàn chải khử tĩnh điện; nguồn nhiệt trên vệ tinh. Cực kì độc.","Phóng xạ alpha rất mạnh; do Marie Curie phát hiện, đặt theo tên Ba Lan."],
+["At","Astatine","[210]","n",2.2,null,["khoahoc","coth"],"Đang được nghiên cứu dùng At-211 điều trị ung thư.","Halogen hiếm nhất trên Trái Đất, phóng xạ mạnh."],
+["Rn","Radon","[222]","g",2.2,null,["coth"],"Khí phóng xạ tự nhiên tích tụ trong tầng hầm, cần thông gió; từng dùng xạ trị.","Khí hiếm nặng sinh ra từ urani trong đất đá; hít lâu ngày làm tăng nguy cơ ung thư phổi."],
+["Fr","Francium","[223]","m",0.7,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Kim loại kiềm phóng xạ; đồng vị bền nhất chỉ tồn tại khoảng 22 phút."],
+["Ra","Radium","[226]","m",0.9,null,["coth"],"Thuốc Ra-223 điều trị ung thư xương; trước đây làm sơn dạ quang mặt đồng hồ.","Phóng xạ mạnh; do ông bà Curie phát hiện năm 1898."],
+["Ac","Actinium","[227]","m",1.1,null,["khoahoc","coth"],"Đang nghiên cứu Ac-225 cho xạ trị ung thư.","Mở đầu dãy actini; phát sáng xanh trong bóng tối do phóng xạ."],
+["Th","Thorium",232.04,"m",1.3,null,["congnghe"],"Nhiên liệu tiềm năng cho lò phản ứng hạt nhân; điện cực hàn TIG.","Phóng xạ yếu, trữ lượng nhiều gấp khoảng 3 lần urani."],
+["Pa","Protactinium",231.04,"m",1.5,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học, xác định tuổi trầm tích đáy biển.","Rất hiếm và phóng xạ."],
+["U","Uranium",238.03,"m",1.38,null,["congnghe"],"Nhiên liệu nhà máy điện hạt nhân (U-235); xác định tuổi đá.","Hạt nhân U-235 phân hạch, giải phóng năng lượng rất lớn."],
+["Np","Neptunium","[237]","m",1.36,null,["khoahoc"],"Nguyên liệu sản xuất Pu-238; máy dò neutron.","Nguyên tố đầu tiên nặng hơn urani được tổng hợp (1940)."],
+["Pu","Plutonium","[244]","m",1.28,null,["congnghe"],"Pin hạt nhân cho tàu thăm dò sao Hoả, sao Thổ (Pu-238).","Phân rã toả nhiệt đều đặn hàng chục năm, đổi thành điện năng."],
+["Am","Americium","[243]","m",1.13,null,["congnghe"],"Thiết bị báo khói trong nhà (Am-241).","Tia alpha ion hoá không khí; khói lọt vào làm dòng điện giảm và chuông báo kêu."],
+["Cm","Curium","[247]","m",1.28,null,["khoahoc"],"Máy phân tích thành phần đất đá trên robot thám hiểm sao Hoả.","Đặt theo tên ông bà Curie; phóng xạ alpha mạnh."],
+["Bk","Berkelium","[247]","m",1.3,null,["khoahoc"],"Dùng làm “bia” để tổng hợp các nguyên tố nặng hơn.","Đặt theo tên thành phố Berkeley (Mỹ), nơi nó được tạo ra."],
+["Cf","Californium","[251]","m",1.3,null,["congnghe"],"Nguồn neutron dò mỏ dầu, kiểm tra mối hàn, khởi động lò phản ứng.","Cf-252 tự phân hạch, phát ra rất nhiều neutron."],
+["Es","Einsteinium","[252]","m",1.3,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên Einstein; tìm thấy trong tàn tích vụ thử bom nhiệt hạch năm 1952."],
+["Fm","Fermium","[257]","m",1.3,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên nhà vật lí Enrico Fermi; chỉ tạo được lượng cực nhỏ."],
+["Md","Mendelevium","[258]","m",1.3,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên Mendeleev, người lập ra bảng tuần hoàn."],
+["No","Nobelium","[259]","m",1.3,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên Alfred Nobel, người lập ra giải Nobel."],
+["Lr","Lawrencium","[266]","m",1.3,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Kết thúc dãy actini; đặt theo tên nhà vật lí Ernest Lawrence, người chế tạo máy gia tốc cyclotron."],
+["Rf","Rutherfordium","[267]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên Rutherford, người phát hiện hạt nhân nguyên tử."],
+["Db","Dubnium","[268]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên thành phố Dubna (Nga), nơi có viện nghiên cứu hạt nhân."],
+["Sg","Seaborgium","[269]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên Glenn Seaborg, người sắp xếp dãy actini vào bảng tuần hoàn."],
+["Bh","Bohrium","[270]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên Niels Bohr, người đề xuất mô hình nguyên tử có các lớp electron."],
+["Hs","Hassium","[269]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên bang Hessen (Đức), nơi nó được tổng hợp."],
+["Mt","Meitnerium","[278]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên nhà vật lí Lise Meitner, người giải thích hiện tượng phân hạch."],
+["Ds","Darmstadtium","[281]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên thành phố Darmstadt (Đức)."],
+["Rg","Roentgenium","[282]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên Röntgen, người phát hiện ra tia X."],
+["Cn","Copernicium","[285]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên Copernicus, người đề xuất thuyết nhật tâm."],
+["Nh","Nihonium","[286]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Nguyên tố đầu tiên do châu Á tìm ra; “Nihon” nghĩa là Nhật Bản."],
+["Fl","Flerovium","[289]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên nhà vật lí Georgy Flyorov (Nga)."],
+["Mc","Moscovium","[290]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên vùng Moskva (Nga)."],
+["Lv","Livermorium","[293]","m",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên phòng thí nghiệm Livermore (Mỹ)."],
+["Ts","Tennessine","[294]","n",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Đặt theo tên bang Tennessee (Mỹ); thuộc nhóm halogen."],
+["Og","Oganesson","[294]","g",null,null,["khoahoc"],"Chỉ dùng trong nghiên cứu khoa học.","Nguyên tố nặng nhất hiện biết, đặt theo tên nhà vật lí Yuri Oganessian."]
 ];
 
 const GROUP_VN = ["","IA","IIA","IIIB","IVB","VB","VIB","VIIB","VIIIB","VIIIB","VIIIB","IB","IIB","IIIA","IVA","VA","VIA","VIIA","VIIIA"];
@@ -254,49 +338,57 @@ function pos(z){
   if(z===1) return [1,1]; if(z===2) return [1,18];
   if(z<=10) return [2, z<=4 ? z-2 : z+8];
   if(z<=18) return [3, z<=12 ? z-10 : z];
-  return [4, z-18];
+  if(z<=36) return [4, z-18];
+  if(z<=54) return [5, z-36];
+  if(z<=86) return [6, z<=57 ? z-54 : z<=71 ? 3 : z-68];
+  return [7, z<=89 ? z-86 : z<=103 ? 3 : z-100];
 }
 const els = E.map((r,i)=>{const z=i+1; const [p,g]=pos(z);
-  return {z,sym:r[0],name:r[1],mass:r[2],cat:r[3],en:r[4],r:r[5],dom:r[6],app:r[7],why:r[8],p,g};});
+  return {z,sym:r[0],name:r[1],mass:r[2],cat:r[3],en:r[4],r:r[5],dom:r[6],app:r[7],why:r[8],p,g,f:(z>=58&&z<=71)||(z>=90&&z<=103)};});
 const bySym = Object.fromEntries(els.map(e=>[e.sym,e]));
 
 const vn = (x,d)=> d==null ? String(x).replace(".",",") : x.toFixed(d).replace(".",",");
 const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
 const sup = n=>String(n).split("").map(c=>SUP[c]).join("");
 
-// Cấu hình electron (Cr, Cu là ngoại lệ)
-const FILL=[["1s",2],["2s",2],["2p",6],["3s",2],["3p",6],["4s",2],["3d",10],["4p",6]];
-const SHOW=["1s","2s","2p","3s","3p","3d","4s","4p"];
+// Cấu hình electron theo thứ tự mức năng lượng, kèm các ngoại lệ
+const FILL=[["1s",2],["2s",2],["2p",6],["3s",2],["3p",6],["4s",2],["3d",10],["4p",6],["5s",2],["4d",10],["5p",6],["6s",2],["4f",14],["5d",10],["6p",6],["7s",2],["5f",14],["6d",10],["7p",6]];
+const SHOW=["1s","2s","2p","3s","3p","3d","4s","4p","4d","4f","5s","5p","5d","5f","6s","6p","6d","7s","7p"];
+const EXC={24:{"4s":1,"3d":5},29:{"4s":1,"3d":10},41:{"5s":1,"4d":4},42:{"5s":1,"4d":5},44:{"5s":1,"4d":7},45:{"5s":1,"4d":8},46:{"5s":0,"4d":10},47:{"5s":1,"4d":10},
+  57:{"4f":0,"5d":1},58:{"4f":1,"5d":1},64:{"4f":7,"5d":1},78:{"6s":1,"5d":9},79:{"6s":1,"5d":10},89:{"5f":0,"6d":1},90:{"5f":0,"6d":2},91:{"5f":2,"6d":1},92:{"5f":3,"6d":1},93:{"5f":4,"6d":1},96:{"5f":7,"6d":1}};
 function orbitals(z){
   let rem=z; const o={};
   for(const [k,c] of FILL){ if(rem<=0) break; const n=Math.min(c,rem); o[k]=n; rem-=n; }
-  if(z===24){o["3d"]=5;o["4s"]=1} if(z===29){o["3d"]=10;o["4s"]=1}
+  Object.assign(o, EXC[z]||{});
   return o;
 }
 function config(z){const o=orbitals(z); return SHOW.filter(k=>o[k]).map(k=>k+sup(o[k])).join(" ");}
+const CORES=[[86,"[Rn]"],[54,"[Xe]"],[36,"[Kr]"],[18,"[Ar]"],[10,"[Ne]"],[2,"[He]"]];
 function configShort(z){
-  const core = z>18?["[Ar]",18]: z>10?["[Ne]",10]: z>2?["[He]",2]:null;
-  if(!core) return config(z);
-  const o=orbitals(z), full=orbitals(core[1]);
-  return core[0]+" "+SHOW.filter(k=>o[k] && o[k]!==(full[k]||0)).map(k=>k+sup(o[k])).join(" ");
+  const core=CORES.find(([n])=>z>n); if(!core) return config(z);
+  const o=orbitals(z), full=orbitals(core[0]);
+  return core[1]+" "+SHOW.filter(k=>o[k] && o[k]!==(full[k]||0)).map(k=>k+sup(o[k])).join(" ");
 }
-function shells(z){const o=orbitals(z); const s=[0,0,0,0]; for(const k in o) s[+k[0]-1]+=o[k]; return s.filter(x=>x);}
+function shells(z){const o=orbitals(z); const s=[0,0,0,0,0,0,0]; for(const k in o) s[+k[0]-1]+=o[k]; return s.filter(x=>x);}
 
 const ION = {1:"⁺",2:"²⁺",3:"³⁺"};
 function posToProp(e){
-  const sh=shells(e.z), out=sh[sh.length-1];
-  let s=`Ô ${e.z} → hạt nhân có ${e.z} proton, vỏ có ${e.z} electron. Chu kì ${e.p} → có ${e.p} lớp electron. Nhóm ${GROUP_VN[e.g]} → `;
-  const g=e.g;
+  const sh=shells(e.z), out=sh[sh.length-1], g=e.g, n=e.p;
+  const radio = e.z>=84||e.z===43||e.z===61 ? (e.z>=104 ? " Đây là nguyên tố siêu nặng, chỉ tồn tại trong thời gian rất ngắn nên tính chất chủ yếu được dự đoán từ vị trí trong bảng." : " Mọi đồng vị của nguyên tố này đều phóng xạ.") : "";
+  let s=`Ô ${e.z} → hạt nhân có ${e.z} proton, vỏ có ${e.z} electron. Chu kì ${n} → có ${n} lớp electron. `;
+  if(e.f) return s+`Thuộc họ ${e.z<90?"lantan":"actini"} (khối f): electron cuối điền vào phân lớp ${e.z<90?"4f":"5f"} nằm sâu bên trong, lớp ngoài cùng có 2 e → là kim loại, tính chất các nguyên tố trong họ rất giống nhau.`+radio;
+  s+=`Nhóm ${GROUP_VN[g]} → `;
+  if(e.sym==="Pd") return s+"trường hợp đặc biệt: 10 electron dồn hết vào phân lớp 4d¹⁰ bão hoà, lớp thứ 5 không có electron. Pd vẫn là kim loại chuyển tiếp, rất bền và là chất xúc tác tốt.";
   if(e.z===1) return s+"chỉ có 1 electron; H thường góp chung electron tạo liên kết cộng hoá trị (H₂O, CH₄) nên là phi kim, dù đứng ở nhóm IA.";
-  if(g===18) return s+(e.z===2?"lớp ngoài cùng có 2 e, đã bão hoà":"lớp ngoài cùng có 8 e")+" — cấu hình rất bền nên hầu như không tham gia phản ứng: khí hiếm.";
-  if(g>=3&&g<=12) return s+`kim loại chuyển tiếp (nhóm B): electron đang điền vào phân lớp 3d, lớp ngoài cùng chỉ có ${out} e → là kim loại, thường có nhiều số oxi hoá.`;
-  if(g===1) return s+`1 e lớp ngoài cùng → dễ nhường 1 e tạo ion ${e.sym}⁺ → kim loại kiềm, tính khử mạnh.`;
-  if(g===2) return s+`2 e lớp ngoài cùng → nhường 2 e tạo ion ${e.sym}²⁺ → kim loại.`;
-  if(g===13) return e.sym==="B" ? s+"3 e lớp ngoài cùng nhưng nguyên tử rất nhỏ, khó nhường electron → B là phi kim." : s+`3 e lớp ngoài cùng → thường nhường 3 e tạo ion ${e.sym}³⁺ → kim loại.`;
-  if(g===14) return s+"4 e lớp ngoài cùng → không dễ nhường hay nhận, thường góp chung 4 e tạo 4 liên kết"+(e.sym==="Ge"?"; ở chu kì 4 tính kim loại tăng nên Ge là chất bán dẫn mang tính kim loại.":(e.sym==="Si"?"; nằm sát ranh giới kim loại nên Si là chất bán dẫn.":"."));
-  if(g===15) return s+"5 e lớp ngoài cùng → có xu hướng nhận thêm 3 e hoặc góp chung electron → phi kim.";
-  if(g===16) return s+`6 e lớp ngoài cùng → có xu hướng nhận 2 e tạo ion ${e.sym}²⁻ → phi kim, tính oxi hoá khá mạnh.`;
-  if(g===17) return s+`7 e lớp ngoài cùng, chỉ thiếu 1 e → dễ nhận 1 e tạo ion ${e.sym}⁻ → phi kim mạnh nhất chu kì (halogen).`;
+  if(g===18) return s+(e.z===2?"lớp ngoài cùng có 2 e, đã bão hoà":"lớp ngoài cùng có 8 e")+" — cấu hình rất bền nên hầu như không tham gia phản ứng: khí hiếm."+radio;
+  if(g>=3&&g<=12) return s+`kim loại chuyển tiếp (khối d): electron cuối điền vào phân lớp ${n-1}d, lớp ngoài cùng chỉ có ${out} e → là kim loại, thường có nhiều số oxi hoá.`+radio;
+  if(g===1) return s+`1 e lớp ngoài cùng → dễ nhường 1 e tạo ion ${e.sym}⁺ → kim loại kiềm, tính khử mạnh; càng xuống dưới càng mạnh.`+radio;
+  if(g===2) return s+`2 e lớp ngoài cùng → nhường 2 e tạo ion ${e.sym}²⁺ → kim loại.`+radio;
+  if(g===13) return e.sym==="B" ? s+"3 e lớp ngoài cùng nhưng nguyên tử rất nhỏ, khó nhường electron → B là phi kim." : s+`3 e lớp ngoài cùng → thường nhường 3 e tạo ion ${e.sym}³⁺ → kim loại.`+radio;
+  if(g===14) return s+"4 e lớp ngoài cùng → không dễ nhường hay nhận, thường góp chung 4 e tạo 4 liên kết"+({C:".",Si:"; nằm sát ranh giới kim loại nên Si là chất bán dẫn.",Ge:"; càng xuống dưới tính kim loại càng tăng nên Ge là chất bán dẫn mang tính kim loại."}[e.sym]||"; càng xuống dưới nhóm tính kim loại càng tăng nên "+e.sym+" là kim loại.")+radio;
+  if(g===15) return s+"5 e lớp ngoài cùng → có xu hướng nhận thêm 3 e hoặc góp chung electron"+(e.cat==="n"?" → phi kim.":"; ở dưới nhóm nên tính kim loại trội hơn → kim loại.")+radio;
+  if(g===16) return s+`6 e lớp ngoài cùng → có xu hướng nhận 2 e tạo ion ${e.sym}²⁻`+(e.cat==="n"?" → phi kim.":"; ở dưới nhóm nên mang tính kim loại.")+radio;
+  if(g===17) return s+`7 e lớp ngoài cùng, chỉ thiếu 1 e → dễ nhận 1 e tạo ion ${e.sym}⁻ → phi kim mạnh (halogen); càng xuống dưới tính phi kim càng giảm.`+radio;
 }
 
 // 6 hồ sơ chi tiết
@@ -367,13 +459,23 @@ const PROFILES = {
 const PROF_ORDER=["O","Na","Cl","Ca","Fe","Cu"];
 
 // Tên tiếng Việt quen dùng (in trên ô) và số oxi hoá thường gặp
-const VN = {H:"Hiđro",He:"Heli",Li:"Liti",Be:"Beri",B:"Bo",C:"Cacbon",N:"Nitơ",O:"Oxi",F:"Flo",Ne:"Neon",Na:"Natri",Mg:"Magie",Al:"Nhôm",Si:"Silic",P:"Photpho",S:"Lưu huỳnh",Cl:"Clo",Ar:"Agon",K:"Kali",Ca:"Canxi",Sc:"Scandi",Ti:"Titan",V:"Vanadi",Cr:"Crom",Mn:"Mangan",Fe:"Sắt",Co:"Coban",Ni:"Niken",Cu:"Đồng",Zn:"Kẽm",Ga:"Gali",Ge:"Gemani",As:"Asen",Se:"Selen",Br:"Brom",Kr:"Kripton"};
-const OX = {H:"−1, +1",He:"",Li:"+1",Be:"+2",B:"+3",C:"−4, +2, +4",N:"−3, +1…+5",O:"−2, −1",F:"−1",Ne:"",Na:"+1",Mg:"+2",Al:"+3",Si:"−4, +4",P:"−3, +3, +5",S:"−2, +4, +6",Cl:"−1, +1…+7",Ar:"",K:"+1",Ca:"+2",Sc:"+3",Ti:"+2, +3, +4",V:"+2…+5",Cr:"+2, +3, +6",Mn:"+2, +4, +7",Fe:"+2, +3",Co:"+2, +3",Ni:"+2, +3",Cu:"+1, +2",Zn:"+2",Ga:"+3",Ge:"+2, +4",As:"−3, +3, +5",Se:"−2, +4, +6",Br:"−1, +1…+7",Kr:"+2"};
+const VN = {H:"Hiđro",He:"Heli",Li:"Liti",Be:"Beri",B:"Bo",C:"Cacbon",N:"Nitơ",O:"Oxi",F:"Flo",Ne:"Neon",Na:"Natri",Mg:"Magie",Al:"Nhôm",Si:"Silic",P:"Photpho",S:"Lưu huỳnh",Cl:"Clo",Ar:"Agon",K:"Kali",Ca:"Canxi",Sc:"Scandi",Ti:"Titan",V:"Vanadi",Cr:"Crom",Mn:"Mangan",Fe:"Sắt",Co:"Coban",Ni:"Niken",Cu:"Đồng",Zn:"Kẽm",Ga:"Gali",Ge:"Gemani",As:"Asen",Se:"Selen",Br:"Brom",Kr:"Kripton",
+  Rb:"Rubiđi",Sr:"Stronti",Y:"Ytri",Zr:"Ziriconi",Nb:"Niobi",Mo:"Molipđen",Tc:"Tecneti",Ru:"Ruteni",Rh:"Rođi",Pd:"Palađi",Ag:"Bạc",Cd:"Cađimi",In:"Inđi",Sn:"Thiếc",Sb:"Antimon",Te:"Telu",I:"Iot",Xe:"Xenon",
+  Cs:"Xesi",Ba:"Bari",La:"Lantan",Ce:"Xeri",Pr:"Prazeođim",Nd:"Neođim",Pm:"Prometi",Sm:"Samari",Eu:"Europi",Gd:"Gađolini",Tb:"Tebi",Dy:"Điprozi",Ho:"Honmi",Er:"Eribi",Tm:"Tuli",Yb:"Ytecbi",Lu:"Lutexi",
+  Hf:"Hafini",Ta:"Tantan",W:"Vonfam",Re:"Reni",Os:"Osimi",Ir:"Iriđi",Pt:"Platin",Au:"Vàng",Hg:"Thuỷ ngân",Tl:"Tali",Pb:"Chì",Bi:"Bitmut",Po:"Poloni",At:"Atatin",Rn:"Rađon",
+  Fr:"Franxi",Ra:"Rađi",Ac:"Actini",Th:"Thori",Pa:"Protactini",U:"Urani",Np:"Neptuni",Pu:"Plutoni",Am:"Amerixi",Cm:"Curi",Bk:"Beckeli",Cf:"Califoni",Es:"Ensteni",Fm:"Fecmi",Md:"Menđelevi",No:"Nobeli",Lr:"Lorenxi",
+  Rf:"Rozơfođi",Db:"Đubni",Sg:"Sibooc",Bh:"Bori",Hs:"Hasi",Mt:"Mâyneri",Ds:"Đacmstati",Rg:"Rơnghen",Cn:"Copecnixi",Nh:"Nihoni",Fl:"Flerovi",Mc:"Moscovi",Lv:"Livemori",Ts:"Tennessin",Og:"Oganesson"};
+const OX = {H:"−1, +1",He:"",Li:"+1",Be:"+2",B:"+3",C:"−4, +2, +4",N:"−3, +1…+5",O:"−2, −1",F:"−1",Ne:"",Na:"+1",Mg:"+2",Al:"+3",Si:"−4, +4",P:"−3, +3, +5",S:"−2, +4, +6",Cl:"−1, +1…+7",Ar:"",K:"+1",Ca:"+2",Sc:"+3",Ti:"+2, +3, +4",V:"+2…+5",Cr:"+2, +3, +6",Mn:"+2, +4, +7",Fe:"+2, +3",Co:"+2, +3",Ni:"+2, +3",Cu:"+1, +2",Zn:"+2",Ga:"+3",Ge:"+2, +4",As:"−3, +3, +5",Se:"−2, +4, +6",Br:"−1, +1…+7",Kr:"+2",
+  Rb:"+1",Sr:"+2",Y:"+3",Zr:"+4",Nb:"+3, +5",Mo:"+4, +6",Tc:"+4, +7",Ru:"+3, +4, +8",Rh:"+3",Pd:"+2, +4",Ag:"+1",Cd:"+2",In:"+3",Sn:"+2, +4",Sb:"−3, +3, +5",Te:"−2, +4, +6",I:"−1, +1…+7",Xe:"+2, +4, +6",
+  Cs:"+1",Ba:"+2",La:"+3",Ce:"+3, +4",Pr:"+3",Nd:"+3",Pm:"+3",Sm:"+2, +3",Eu:"+2, +3",Gd:"+3",Tb:"+3, +4",Dy:"+3",Ho:"+3",Er:"+3",Tm:"+3",Yb:"+2, +3",Lu:"+3",
+  Hf:"+4",Ta:"+5",W:"+4, +6",Re:"+4, +7",Os:"+4, +8",Ir:"+3, +4",Pt:"+2, +4",Au:"+1, +3",Hg:"+1, +2",Tl:"+1, +3",Pb:"+2, +4",Bi:"+3, +5",Po:"+2, +4",At:"−1, +1",Rn:"+2",
+  Fr:"+1",Ra:"+2",Ac:"+3",Th:"+4",Pa:"+5",U:"+3…+6",Np:"+3…+7",Pu:"+3…+6",Am:"+3",Cm:"+3",Bk:"+3, +4",Cf:"+3",Es:"+3",Fm:"+3",Md:"+2, +3",No:"+2, +3",Lr:"+3",Rf:"+4",Db:"+5",Sg:"+6",Bh:"+7",Hs:"+8"};
+DOM.khoahoc = "Nghiên cứu";
 const OXIDE = ["","R₂O","RO","R₂O₃","RO₂","R₂O₅","RO₃","R₂O₇","RO₄","","","R₂O","RO","R₂O₃","RO₂","R₂O₅","RO₃","R₂O₇",""];
 const HYD = {14:"RH₄",15:"RH₃",16:"H₂R",17:"HR"};
 const VI = Object.fromEntries(Object.entries(VN).map(([k,v]) => [k, v.toLowerCase()]));
-const blockOf = e => (e.z===2||e.g<=2) ? "s" : (e.g<=12 ? "d" : "p");
-const BLOCK_VN = {s:"Nguyên tố s", p:"Nguyên tố p", d:"Nguyên tố d"};
+const blockOf = e => e.f ? "f" : (e.z===2||e.g<=2) ? "s" : (e.g<=12 ? "d" : "p");
+const BLOCK_VN = {s:"Nguyên tố s", p:"Nguyên tố p", d:"Nguyên tố d", f:"Nguyên tố f"};
 const fillOf = (e,m) => m==="block" ? `var(--${blockOf(e)})` : ({m:"var(--metal)",n:"var(--nonmetal)",g:"var(--noble)"})[e.cat];
 const fullName = e => `${e.name} (${VI[e.sym]})`;
 const cfgCell = e => e.z<=2 ? config(e.z) : configShort(e.z).replace(/ /g,"");
@@ -385,14 +487,14 @@ function markSeen(sym){
   if(sym) seen.add(sym);
   try{ localStorage.setItem("ptdx-seen", JSON.stringify([...seen])); }catch(err){}
   document.getElementById("seen-n").textContent = seen.size;
-  document.getElementById("seen-bar").style.width = (seen.size/36*100)+"%";
+  document.getElementById("seen-bar").style.width = (seen.size/els.length*100)+"%";
 }
 
 /* ---------- Bảng ---------- */
 const tbl = document.getElementById("ptable");
 let mode = "block", domSel = null, cur = null;
 function cellInner(e){
-  return `<span class="top"><b>${e.z}${PROFILES[e.sym]?'<span class="star" aria-hidden="true">★</span>':""}</b><em>${vn(e.mass)}</em></span>
+  return `<span class="top"><b>${e.z}${e.z===57?"*":e.z===89?"**":""}${PROFILES[e.sym]?'<span class="star" aria-hidden="true">★</span>':""}</b><em>${vn(e.mass)}</em></span>
     <span class="mid"><span class="s">${e.sym}</span><span class="en">${e.en==null?"":vn(e.en,2)}</span></span>
     <span class="nm">${VN[e.sym]}</span><span class="cf">${cfgCell(e)}</span><span class="ox">${OX[e.sym]||"&nbsp;"}</span>`;
 }
@@ -401,17 +503,21 @@ function cellInner(e){
   for(const g of [1,2,13,14,15,16,17,18]) h += `<div class="gh" style="grid-column:${g+1};grid-row:1">${GROUP_VN[g]}</div>`;
   for(const g of [3,4,5,6,7,11,12]) h += `<div class="gh b" style="grid-column:${g+1};grid-row:4">${GROUP_VN[g]}</div>`;
   h += `<div class="gh b" style="grid-column:9/12;grid-row:4">VIIIB</div>`;
-  for(let p=1;p<=4;p++) h += `<div class="ph" style="grid-column:1;grid-row:${p+1}">${p}</div>`;
+  for(let p=1;p<=7;p++) h += `<div class="ph" style="grid-column:1;grid-row:${p+1}">${p}</div>`;
   const al = bySym.Al;
   h += `<div class="key"><div class="el" aria-hidden="true">${cellInner(al)}</div>
     <ul><li><b>13</b> số hiệu nguyên tử · <b>26,98</b> nguyên tử khối</li><li><b>Al</b> kí hiệu · <b>1,61</b> độ âm điện</li><li><b>Nhôm</b> tên nguyên tố</li><li><b>[Ne]3s²3p¹</b> cấu hình electron</li><li><b>+3</b> số oxi hoá thường gặp</li></ul></div>`;
-  for(const e of els) h += `<button class="el" id="el-${e.sym}" data-sym="${e.sym}" style="grid-column:${e.g+1};grid-row:${e.p+1}" aria-label="${fullName(e)}, Z = ${e.z}">${cellInner(e)}</button>`;
-  h += `<div class="oxl" style="grid-column:1;grid-row:6">Oxit cao nhất</div><div class="oxl" style="grid-column:1;grid-row:7">Hợp chất khí với H</div>`;
+  for(const e of els){
+    const col = e.f ? (e.z<90 ? e.z-58 : e.z-90)+5 : e.g+1, row = e.f ? (e.z<90 ? 12 : 13) : e.p+1;
+    h += `<button class="el" id="el-${e.sym}" data-sym="${e.sym}" style="grid-column:${col};grid-row:${row}" aria-label="${fullName(e)}, Z = ${e.z}">${cellInner(e)}</button>`;
+  }
+  h += `<div class="oxl" style="grid-column:1;grid-row:9">Oxit cao nhất</div><div class="oxl" style="grid-column:1;grid-row:10">Hợp chất khí với H</div><div style="grid-column:1/-1;grid-row:11;height:10px"></div>`;
+  h += `<div class="fl" style="grid-column:1/5;grid-row:12"><b>*</b> Họ Lantan</div><div class="fl" style="grid-column:1/5;grid-row:13"><b>**</b> Họ Actini</div>`;
   for(let g=1; g<=18; g++){
     if(g===9||g===10) continue;
     const a = g<=2||g>=13;
-    h += `<div class="oxc${a?" a":""}" style="grid-column:${g===8?"9/12":g+1};grid-row:6">${OXIDE[g]}</div>`;
-    if(HYD[g]) h += `<div class="oxc h" style="grid-column:${g+1};grid-row:7">${HYD[g]}</div>`;
+    h += `<div class="oxc${a?" a":""}" style="grid-column:${g===8?"9/12":g+1};grid-row:9">${OXIDE[g]}</div>`;
+    if(HYD[g]) h += `<div class="oxc h" style="grid-column:${g+1};grid-row:10">${HYD[g]}</div>`;
   }
   tbl.innerHTML = h;
 })();
@@ -432,7 +538,7 @@ function render(){
   chips.querySelectorAll("[data-d]").forEach(c => { const on = c.dataset.d===domSel; c.setAttribute("aria-pressed", on); c.style.background = on ? "var(--ink)" : ""; c.style.color = on ? "#fff" : ""; });
   const lg = document.getElementById("legend");
   lg.innerHTML = mode==="block"
-    ? `<div style="background:var(--s)">IA, IIA, He: khối các nguyên tố s</div><div style="background:var(--p)">IIIA → VIIIA: khối các nguyên tố p</div><div style="background:var(--d)">IB → VIIIB: khối các nguyên tố d</div><div>Khối được đặt theo phân lớp chứa electron cuối cùng.</div>`
+    ? `<div style="background:var(--s)">IA, IIA, He: khối các nguyên tố s</div><div style="background:var(--p)">IIIA → VIIIA: khối các nguyên tố p</div><div style="background:var(--d)">IB → VIIIB: khối các nguyên tố d</div><div style="background:var(--f)">Họ lantan, họ actini: khối các nguyên tố f</div><div>Khối được đặt theo phân lớp chứa electron cuối cùng.</div>`
     : `<div style="background:var(--metal)">Kim loại</div><div style="background:var(--nonmetal)">Phi kim</div><div style="background:var(--noble)">Khí hiếm</div><div>${mode==="life" ? "Chọn một lĩnh vực ở trên để lọc các nguyên tố có mặt ở đó." : "Ranh giới kim loại – phi kim chạy chéo qua B, Si, Ge, As."}</div>`;
 }
 
@@ -483,7 +589,8 @@ document.addEventListener("click", ev => {
 const DOM_ICON = {
   nuoc: ICON.drop, dien: ICON.plug, congtrinh: ICON.bridge, coth: ICON.lungs,
   congnghe: '<rect x="19" y="6" width="26" height="52" rx="5"/><path d="M28 50h8M25 14h14"/>',
-  cayxanh: '<path d="M14 52C14 27 30 12 53 12c0 25-15 40-39 40z"/><path d="M14 52l22-22"/>'
+  cayxanh: '<path d="M14 52C14 27 30 12 53 12c0 25-15 40-39 40z"/><path d="M14 52l22-22"/>',
+  khoahoc: '<path d="M24 6h16M28 6v16L14 50a5 5 0 0 0 4 8h28a5 5 0 0 0 4-8L36 22V6"/><path d="M19 42h26"/>'
 };
 const drawer = document.getElementById("drawer"), info = document.getElementById("info");
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
@@ -492,7 +599,7 @@ function select(sym, opts={}){
   const e = bySym[sym]; if(!e) return; cur = sym;
   tbl.querySelectorAll(".el.sel").forEach(x => x.classList.remove("sel"));
   document.getElementById("el-"+sym).classList.add("sel");
-  const P = PROFILES[sym], prev = els[(e.z+34)%36], next = els[e.z%36];
+  const P = PROFILES[sym], prev = els[(e.z+els.length-2)%els.length], next = els[e.z%els.length];
   const uses = P ? P.use : e.app.replace(/\.$/,"").split("; ").map(cap);
   const video = "https://www.youtube.com/results?search_query=" + encodeURIComponent(`${VI[e.sym]} ${e.name} ứng dụng hoá học`);
   info.innerHTML = `
@@ -543,9 +650,9 @@ document.addEventListener("keydown", ev => {
   if(ev.target.closest("input,select,textarea")) return;
   if(ev.key==="Escape" && cur) return closeDrawer();
   if(ev.key!=="ArrowRight" && ev.key!=="ArrowLeft") return;
-  if(!cur) return select(ev.key==="ArrowRight" ? "H" : "Kr");
+  if(!cur) return select(ev.key==="ArrowRight" ? "H" : "Og");
   const e = bySym[cur];
-  select(ev.key==="ArrowRight" ? els[e.z%36].sym : els[(e.z+34)%36].sym);
+  select(ev.key==="ArrowRight" ? els[e.z%els.length].sym : els[(e.z+els.length-2)%els.length].sym);
 });
 
 /* ---------- Khởi động ---------- */
