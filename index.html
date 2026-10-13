@@ -45,7 +45,20 @@ mark{background:var(--yellow);color:var(--ink);padding:0 3px}
 .hero .lede{color:var(--muted);font-size:17px;max-width:62ch;margin-top:6px}
 .toolbar{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;margin:20px 0 12px}
 .toolbar label{font-family:var(--display);font-weight:600;margin-right:10px}
-select#colorby{border:var(--b);border-radius:4px;padding:7px 10px;background:var(--surface);font-family:var(--display);cursor:pointer}
+.toolbar .lbl{font-family:var(--display);font-weight:600;margin-right:10px}
+.picker{display:flex;align-items:center;flex-wrap:wrap}
+.dd{position:relative;display:inline-block}
+.dd-btn{display:flex;align-items:center;gap:10px;min-width:270px;border:var(--b);border-radius:4px;background:var(--surface);padding:7px 12px;font-family:var(--display);font-weight:500;cursor:pointer;text-align:left;transition:transform .12s,box-shadow .12s}
+.dd-btn:hover,.dd-btn[aria-expanded="true"]{transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
+.dd-btn .chev{margin-left:auto;width:14px;height:14px;transition:transform .15s}
+.dd-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.sw{display:inline-flex;gap:2px;flex:0 0 auto}
+.sw i{width:10px;height:14px;border:1px solid var(--grid)}
+.dd-list{position:absolute;top:calc(100% + 6px);left:0;min-width:100%;z-index:15;margin:0;padding:4px;list-style:none;background:var(--surface);border:var(--b);border-radius:4px;box-shadow:4px 4px 0 var(--ink)}
+.dd-list li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:3px;cursor:pointer;font-family:var(--display);font-weight:500;white-space:nowrap}
+.dd-list li .tick{width:14px;color:var(--accent);font-weight:700}
+.dd-list li.act{background:var(--accent-soft)}
+.dd-list li[aria-selected="true"]{color:var(--accent)}
 .progress{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--mono);font-size:13px}
 .bar{width:150px;height:12px;border:var(--b);border-radius:999px;overflow:hidden;background:var(--surface)}
 .bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(135deg,var(--ink) 0 3px,transparent 3px 6px);transition:width .4s}
@@ -171,12 +184,14 @@ footer{margin-top:40px;padding-top:16px;border-top:var(--b);color:var(--muted);f
   </div>
 
   <div class="toolbar">
-    <div><label for="colorby">Tô màu theo</label>
-      <select id="colorby">
-        <option value="block">Khối nguyên tố s, p, d, f</option>
-        <option value="cat">Kim loại, phi kim, khí hiếm</option>
-        <option value="life">Nguyên tố quanh ta</option>
-      </select>
+    <div class="picker"><span class="lbl" id="colorby-lbl">Tô màu theo</span>
+      <div class="dd" id="dd">
+        <button class="dd-btn" id="colorby" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="colorby-lbl colorby">
+          <span class="sw" id="dd-sw"></span><span id="dd-text"></span>
+          <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg>
+        </button>
+        <ul class="dd-list" id="dd-list" role="listbox" aria-labelledby="colorby-lbl" tabindex="-1" hidden></ul>
+      </div>
     </div>
     <div class="progress"><span>Đã khám phá <b id="seen-n">0</b>/118</span><span class="bar"><i id="seen-bar"></i></span></div>
   </div>
@@ -527,7 +542,37 @@ function cellInner(e){
   tbl.innerHTML = h;
 })();
 tbl.addEventListener("click", ev => { const b = ev.target.closest("button.el"); if(b) select(b.dataset.sym); });
-document.getElementById("colorby").addEventListener("change", ev => { mode = ev.target.value; if(mode!=="life") domSel = null; render(); });
+const MODES = [
+  {v:"block", t:"Khối nguyên tố s, p, d, f", sw:["--s","--p","--d","--f"]},
+  {v:"cat",   t:"Kim loại, phi kim, khí hiếm", sw:["--metal","--nonmetal","--noble"]},
+  {v:"life",  t:"Nguyên tố quanh ta", sw:["--accent-soft","--yellow"]}
+];
+const ddBtn = document.getElementById("colorby"), ddList = document.getElementById("dd-list");
+const swHTML = m => m.sw.map(c=>`<i style="background:var(${c})"></i>`).join("");
+let ddAct = 0;
+function ddPaint(){
+  const m = MODES.find(x=>x.v===mode);
+  document.getElementById("dd-sw").innerHTML = swHTML(m);
+  document.getElementById("dd-text").textContent = m.t;
+  ddList.innerHTML = MODES.map((x,i)=>`<li role="option" id="dd-opt-${x.v}" data-v="${x.v}" aria-selected="${x.v===mode}" class="${i===ddAct?"act":""}"><span class="tick">${x.v===mode?"✓":""}</span><span class="sw">${swHTML(x)}</span>${x.t}</li>`).join("");
+  ddList.setAttribute("aria-activedescendant","dd-opt-"+MODES[ddAct].v);
+}
+function ddOpen(){ ddAct = MODES.findIndex(x=>x.v===mode); ddPaint(); ddList.hidden = false; ddBtn.setAttribute("aria-expanded","true"); ddList.focus(); }
+function ddClose(focus=true){ ddList.hidden = true; ddBtn.setAttribute("aria-expanded","false"); if(focus) ddBtn.focus(); }
+function ddPick(v){ mode = v; if(mode!=="life") domSel = null; render(); ddPaint(); ddClose(); }
+ddBtn.addEventListener("click", () => ddList.hidden ? ddOpen() : ddClose());
+ddBtn.addEventListener("keydown", ev => { if(ev.key==="ArrowDown"||ev.key==="ArrowUp"){ ev.preventDefault(); ddOpen(); } });
+ddList.addEventListener("click", ev => { const li = ev.target.closest("li"); if(li) ddPick(li.dataset.v); });
+ddList.addEventListener("mousemove", ev => { const li = ev.target.closest("li"); if(!li) return; const i = MODES.findIndex(x=>x.v===li.dataset.v); if(i!==ddAct){ ddAct = i; ddPaint(); } });
+ddList.addEventListener("keydown", ev => {
+  ev.stopPropagation();
+  if(ev.key==="ArrowDown"){ ev.preventDefault(); ddAct = (ddAct+1)%MODES.length; ddPaint(); }
+  else if(ev.key==="ArrowUp"){ ev.preventDefault(); ddAct = (ddAct+MODES.length-1)%MODES.length; ddPaint(); }
+  else if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); ddPick(MODES[ddAct].v); }
+  else if(ev.key==="Escape"||ev.key==="Tab"){ ddClose(ev.key==="Escape"); }
+});
+document.addEventListener("click", ev => { if(!ddList.hidden && !ev.target.closest("#dd")) ddClose(false); });
+ddPaint();
 
 const chips = document.getElementById("domchips");
 chips.innerHTML = Object.entries(DOM).map(([k,v]) => `<button class="btn sm" id="dom-${k}" data-d="${k}" aria-pressed="false">${v} · ${els.filter(e=>e.dom.includes(k)).length}</button>`).join("");
@@ -660,7 +705,7 @@ function closeDrawer(){
 }
 document.getElementById("drawer-close").addEventListener("click", closeDrawer);
 document.addEventListener("keydown", ev => {
-  if(ev.target.closest("input,select,textarea")) return;
+  if(ev.target.closest("input,select,textarea,#dd")) return;
   if(ev.key==="Escape" && cur) return closeDrawer();
   if(ev.key!=="ArrowRight" && ev.key!=="ArrowLeft") return;
   if(!cur) return select(ev.key==="ArrowRight" ? "H" : "Og");
