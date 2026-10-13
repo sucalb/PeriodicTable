@@ -1,0 +1,623 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bảng Tuần Hoàn Đời Sống</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+/* Layout: top bar → heading + progress → section tabs → [table panel | sticky element panel] → trend chart → 6 profile sheets → QR cards → big questions.
+   Deliberately single light theme: a bright classroom "lab sheet" look with ink outlines and pastel blocks. */
+:root{
+  color-scheme:light;
+  --bg:#FDF3F8; --surface:#FFFFFF; --ink:#1C1218; --muted:#6B5563; --hair:#F0D9E5;
+  --purple:#C2187A; --purple-soft:#FBE3EF; --yellow:#FFE347; --hot:#2E8B3E; --nucleus:#D27A00; --good:#13895F; --bad:#D2362A;
+  --s:#F9C9DF; --p:#D5EFC4; --d:#FFE7B0;
+  --metal:#FFD9B8; --nonmetal:#D5EFC4; --noble:#D6DCF7;
+  --display:"Lexend", "Be Vietnam Pro", system-ui, sans-serif;
+  --body:"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --b:1.5px solid var(--ink);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0;font-weight:600}
+p{margin:0}
+a{color:var(--purple)}
+button,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+mark{background:var(--yellow);color:var(--ink);padding:0 3px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* top bar */
+.topbar{border-bottom:var(--b);background:var(--surface)}
+.topbar .in{max-width:1240px;margin:0 auto;padding:12px 16px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:20px;text-decoration:none;color:var(--ink)}
+.brand .box{border:2px solid var(--ink);padding:0 8px;line-height:1.4;font-family:var(--mono);font-weight:700}
+.topbar .sub{color:var(--muted);font-size:14px;flex:1 1 280px;min-width:0}
+.btn{display:inline-flex;align-items:center;gap:6px;border:var(--b);background:var(--surface);border-radius:4px;padding:8px 16px;font-weight:600;font-family:var(--display);cursor:pointer;text-decoration:none;color:var(--ink);transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
+.btn.primary{background:var(--purple);border-color:var(--purple);color:#fff}
+.btn.primary:hover{box-shadow:3px 3px 0 var(--ink)}
+.btn.sm{padding:5px 10px;font-size:13px}
+
+.wrap{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:28px 64px}
+.hero{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between}
+.hero h1{font-size:clamp(34px,5vw,52px);color:var(--purple);font-weight:700;letter-spacing:-.01em}
+.hero .lede{color:var(--muted);font-size:17px;max-width:58ch;margin-top:6px}
+.progress{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px;font-family:var(--mono);font-size:14px;font-weight:500}
+.bar{width:180px;height:14px;border:var(--b);border-radius:999px;overflow:hidden;background:var(--surface)}
+.bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(135deg,var(--ink) 0 3px,transparent 3px 6px);transition:width .4s}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px}
+.tagbox{border:var(--b);background:var(--surface);border-radius:4px;padding:4px 10px;font-family:var(--mono);font-size:13px}
+
+/* tabs */
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;border-bottom:var(--b);margin-top:26px}
+nav.tabs a{display:flex;align-items:center;gap:8px;white-space:nowrap;text-decoration:none;color:var(--ink);font-family:var(--display);font-weight:500;font-size:16px;padding:12px 14px;border-bottom:4px solid transparent;margin-bottom:-1.5px}
+nav.tabs a:hover{background:var(--purple-soft)}
+nav.tabs a.on{border-bottom-color:var(--purple);font-weight:600}
+nav.tabs .dot{width:18px;height:18px;border-radius:50%;background:var(--yellow);border:1.5px solid var(--ink);display:inline-grid;place-items:center;font-size:11px;line-height:1}
+
+section{padding-top:28px;scroll-margin-top:64px}
+.eyebrow{font-family:var(--mono);font-size:14px;color:var(--muted)}
+.sec-title{font-size:clamp(22px,3vw,30px);font-weight:700;margin:2px 0 6px}
+.sec-lede{color:var(--muted);max-width:66ch;margin-bottom:18px}
+.panel{background:var(--surface);border:var(--b);border-radius:2px;padding:18px}
+
+/* lab grid */
+.lab{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:20px;align-items:start}
+.lab > *{min-width:0}
+.side{display:grid;gap:16px;position:sticky;top:16px}
+.info{max-height:calc(100vh - 150px);overflow-y:auto}
+.info-head{display:flex;gap:14px;align-items:center;padding-bottom:12px;border-bottom:var(--b)}
+.info-head .bigtile{width:76px}.info-head .bigtile .s{font-size:28px}
+.tagline{font-size:14px;color:var(--purple);font-weight:600;margin-top:2px}
+.blk h4{display:flex;align-items:center;gap:8px}
+.blk h4 .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--yellow);border:1.5px solid var(--ink);font-family:var(--mono);font-size:11px}
+.pics{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin:6px 0 10px}
+.pic{border:var(--b);border-radius:4px;background:var(--purple-soft);display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;color:var(--purple);font-size:12px;font-weight:600;text-align:center}
+.pic svg{width:40px;height:40px}
+.pic span{color:var(--ink)}
+.uses{margin:0;padding-left:18px;font-size:14px;display:grid;gap:3px}
+.why{font-size:14px;margin-top:8px}
+.side .panel.info h3{font-size:20px;margin:0}
+.side .panel h3{font-size:20px;margin-bottom:10px}
+select#colorby{width:100%;border:var(--b);border-radius:2px;padding:10px 12px;background:var(--surface);font-size:16px;font-family:var(--display);cursor:pointer}
+
+.tbl-scroll{overflow-x:auto;scrollbar-width:none}
+.tbl-scroll::-webkit-scrollbar{display:none}
+.ptable{display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:4px}
+@media (max-width:700px){.ptable{min-width:620px}}
+.glabel{text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);align-self:end;white-space:nowrap}
+.el{position:relative;aspect-ratio:1/1.02;border:1.5px solid transparent;border-radius:3px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px;transition:transform .12s,border-color .12s,opacity .2s}
+.el:hover{border-color:var(--ink);transform:translateY(-2px)}
+.el .z{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1}
+.el .s{font-family:var(--display);font-weight:600;font-size:clamp(15px,1.8vw,22px);line-height:1.1}
+.el .v{font-family:var(--mono);font-size:9px;color:var(--ink);line-height:1;height:9px}
+.el.sel{border:2.5px solid var(--ink);box-shadow:3px 3px 0 var(--ink);transform:translate(-1px,-1px)}
+.el .seen{position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:var(--ink)}
+.el .star{position:absolute;top:2px;left:3px;font-size:9px;line-height:1;color:var(--purple)}
+.el.dim{opacity:.18}
+.keycell{grid-column:3/13;grid-row:2/4;display:flex;align-items:center;gap:14px;padding:4px 8px;min-width:0}
+.keybig{flex:0 0 auto;width:84px;border:var(--b);border-radius:3px;background:var(--p);padding:6px 8px;text-align:center}
+.keybig .z{font-family:var(--mono);font-size:12px}
+.keybig .s{font-family:var(--display);font-weight:700;font-size:30px;line-height:1.05}
+.keybig .nm{font-size:11px}
+.keylist{list-style:none;margin:0;padding:0;font-size:12px;display:grid;gap:2px;color:var(--muted);min-width:0}
+.keylist b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;margin-top:14px;font-size:14px;color:var(--muted)}
+.legend i{display:inline-block;width:16px;height:12px;vertical-align:-1px;margin-right:6px}
+.gradbar{display:inline-block;width:160px;height:12px;border:1px solid var(--hair);background:linear-gradient(90deg,#fff,color-mix(in oklab,var(--purple) 62%,#fff))}
+.rule{margin-top:14px;padding-top:12px;border-top:1px dashed var(--hair);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{border:var(--b);background:var(--surface);border-radius:4px;padding:5px 12px;font-size:14px;cursor:pointer;font-family:var(--display)}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff}
+.chip .n{font-family:var(--mono);opacity:.6;margin-left:4px;font-size:12px}
+
+/* element info panel */
+.info h3{font-size:22px}
+.info .cat{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:2px}
+.bohr{margin:10px auto 4px;max-width:250px}
+.bohr svg{width:100%;height:auto;display:block}
+.bohr .cap{text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.shell{transform-box:view-box;transform-origin:center;animation:spin linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.shell{animation:none}.el,.btn{transition:none}}
+.facts{margin:10px 0 0;display:grid}
+.facts div{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--hair)}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0;font-family:var(--mono);text-align:right;overflow-wrap:anywhere;min-width:0}
+.facts .cfg{flex-direction:column;gap:2px}
+.facts .cfg dd{text-align:left;font-size:13px}
+.blk{margin-top:14px}
+.blk h4{font-size:15px;margin-bottom:4px}
+.blk p{font-size:14px}
+.blk p + p{margin-top:6px}
+.domains{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.domains span{font-size:12px;border:1px solid var(--ink);border-radius:999px;padding:1px 9px}
+.info-nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.qrrow{display:flex;gap:12px;align-items:center;margin-top:14px}
+.qrrow p{font-size:13px;color:var(--muted)}
+.qr{background:#fff;border:var(--b);padding:5px;line-height:0;flex:0 0 auto}
+.qr svg{width:92px;height:92px}
+.tip{background:var(--surface);border:var(--b);border-radius:14px;padding:16px 18px}
+.tip h3{font-size:18px;margin-bottom:6px}
+.tip p{font-size:15px}
+.tip p + p{color:var(--muted);margin-top:8px}
+
+/* quiz */
+.quiz{border:var(--b);border-radius:4px;padding:12px 14px;display:grid;gap:8px;background:var(--purple-soft)}
+.quiz .qt{font-weight:600;font-size:14px}
+.opts{display:grid;gap:6px}
+.opt{text-align:left;border:1.5px solid var(--ink);background:var(--surface);border-radius:4px;padding:7px 10px;cursor:pointer;font-size:14px}
+.opt:hover:not(:disabled){background:var(--yellow)}
+.opt.ok{background:#D6F2E3;border-color:var(--good)}
+.opt.no{background:#FBDCD8;border-color:var(--bad)}
+.opt:disabled{cursor:default}
+.fb{font-size:14px}
+
+/* chart */
+.chart-scroll{overflow-x:auto}
+.chart-scroll svg{display:block;width:100%;height:auto;min-width:560px}
+.seg{display:inline-flex;border:var(--b);border-radius:4px;overflow:hidden;margin-bottom:14px}
+.seg button{border:0;background:var(--surface);padding:7px 14px;cursor:pointer;font-family:var(--display);font-weight:500}
+.seg button + button{border-left:var(--b)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.trend-notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:14px}
+.trend-notes div{border:var(--b);background:var(--surface);border-radius:4px;padding:12px 14px;font-size:14px}
+.trend-notes b{display:block;font-family:var(--display);font-size:16px;font-weight:600;margin-bottom:4px}
+
+/* profiles */
+.ptabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.ptabs button{display:flex;align-items:center;gap:8px;border:var(--b);background:var(--surface);border-radius:4px;padding:6px 12px 6px 6px;cursor:pointer;font-family:var(--display);font-weight:500}
+.ptabs button b{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:3px;font-weight:700;background:var(--c)}
+.ptabs button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.ptabs button[aria-pressed="true"] b{color:var(--ink)}
+.sheet{background:var(--surface);border:var(--b);border-radius:2px}
+.sheet-top{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:18px 20px;border-bottom:var(--b)}
+.bigtile{width:88px;flex:0 0 auto;border:var(--b);border-radius:3px;background:var(--c);padding:6px 8px;text-align:center}
+.bigtile .z{font-family:var(--mono);font-size:12px}
+.bigtile .s{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.05}
+.bigtile .nm{font-size:11px}
+.bigtile .v{font-family:var(--mono);font-size:11px}
+.sheet-top h3{font-size:28px;font-weight:700}
+.sheet-top .tg{color:var(--muted)}
+.sheet-top .ico{margin-left:auto;width:60px;height:60px;color:var(--purple)}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.f{padding:14px 20px;border-bottom:1px solid var(--hair);min-width:0}
+.f .k{display:flex;gap:8px;align-items:baseline;font-family:var(--display);font-weight:600;font-size:14px;margin-bottom:4px}
+.f .k .num{font-family:var(--mono);color:var(--purple);font-weight:700}
+.f.wide{grid-column:1/-1}
+.f ul{margin:0;padding-left:18px}
+.f.explain{background:var(--purple-soft)}
+.f.explain .k .num{background:var(--yellow);color:var(--ink);padding:0 4px}
+.extras{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;padding:18px 20px}
+.extras h4{font-size:16px;margin-bottom:6px}
+.safety{font-size:13px;margin-top:8px;padding:6px 10px;background:#FFF6CC;border-left:4px solid var(--yellow)}
+.script{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:14px}
+.script li{display:grid;grid-template-columns:64px 1fr;gap:8px}
+.script .mono{color:var(--purple);font-size:12px;padding-top:2px;font-weight:700}
+
+/* QR */
+.qrgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.qrcard{display:flex;gap:12px;align-items:center;background:var(--surface);border:var(--b);border-radius:2px;padding:12px}
+.qrcard .bigtile{width:80px}.qrcard .bigtile .s{font-size:28px}
+.qrcard .qr svg{width:104px;height:104px}
+
+/* big questions */
+.bigq{display:grid;gap:10px}
+details.q{background:var(--surface);border:var(--b);border-radius:2px;padding:0 18px}
+details.q summary{cursor:pointer;padding:14px 0;font-family:var(--display);font-weight:600;font-size:17px;list-style:none;display:flex;gap:12px;align-items:center}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary .num{display:inline-grid;place-items:center;width:28px;height:28px;flex:0 0 auto;border-radius:50%;background:var(--yellow);border:1.5px solid var(--ink);font-family:var(--mono);font-size:13px}
+details.q summary::after{content:"+";margin-left:auto;font-family:var(--mono);font-size:20px}
+details.q[open] summary::after{content:"−"}
+details.q .ans{padding:0 0 16px 40px;display:grid;gap:8px;max-width:80ch}
+
+footer{margin-top:56px;padding-top:18px;border-top:var(--b);color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+
+@media (max-width:980px){
+  .lab{grid-template-columns:minmax(0,1fr)}
+  .side{position:static}
+  .info{max-height:none;overflow:visible}
+}
+@media (max-width:560px){
+  .sheet-top .ico{display:none}
+  details.q .ans{padding-left:0}
+  .topbar .sub{display:none}
+}
+@media print{
+  nav.tabs,.topbar .btn,.info-nav,.ptabs{display:none!important}
+  .sheet[hidden]{display:block!important}
+  .lab{grid-template-columns:minmax(0,1fr)}
+  .side{position:static}
+  .ptable{min-width:0}
+  .shell{animation:none}
+}
+</style>
+
+<header class="topbar"><div class="in">
+  <a class="brand" href="#bang"><span class="box">36</span>Bảng tuần hoàn đời sống</a>
+  <span class="sub">Hoá học 10 · Chủ đề 2 · Bảng tuần hoàn tương tác</span>
+</div></header>
+
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <h1>Bảng tuần hoàn đời sống</h1>
+      <p class="lede">Bấm vào một ô nguyên tố để xem ứng dụng của nó trong đời sống: hình ảnh, video, mô hình nguyên tử, thí nghiệm và câu hỏi.</p>
+      <div class="progress"><span>Đã khám phá <b id="seen-n">0</b>/36 nguyên tố</span><span class="bar"><i id="seen-bar"></i></span></div>
+    </div>
+  </div>
+
+
+  <section id="bang">
+    <h2 class="sec-title">Bảng tuần hoàn tương tác</h2>
+    <div class="lab">
+      <div class="panel">
+        <div class="tbl-scroll"><div class="ptable" id="ptable"></div></div>
+        <div class="legend" id="legend"></div>
+        <div class="chips" id="domchips" hidden></div>
+        <div class="rule" id="rule" hidden></div>
+      </div>
+      <aside class="side" id="side">
+        <div class="panel">
+          <h3><label for="colorby">Tô màu theo</label></h3>
+          <select id="colorby">
+            <option value="block">Khối nguyên tố s, p, d</option>
+            <option value="cat">Kim loại, phi kim, khí hiếm</option>
+            <option value="life">Nguyên tố quanh ta</option>
+          </select>
+        </div>
+        <div class="panel info" id="info"></div>
+      </aside>
+    </div>
+  </section>
+
+  <footer>
+    <span>Không chỉ học bảng tuần hoàn, hãy biến bảng tuần hoàn thành câu chuyện của cuộc sống.</span>
+    <span>Số liệu: nguyên tử khối theo IUPAC · độ âm điện thang Pauling · bán kính cộng hoá trị (pm).</span>
+  </footer>
+</main>
+
+<script>
+// Địa chỉ trang đã đăng, để mã QR trỏ đúng; để trống thì dùng địa chỉ hiện tại.
+const SITE_URL = "https://sucalb.github.io/bang-tuan-hoan/";
+
+const DOM = {nuoc:"Nước", dien:"Dây điện", congtrinh:"Công trình", coth:"Cơ thể & hô hấp", congnghe:"Công nghệ", cayxanh:"Cây xanh"};
+
+// [kí hiệu, tên, nguyên tử khối, loại m/n/g, độ âm điện, bán kính pm, lĩnh vực, ứng dụng, vai trò]
+const E = [
+["H","Hydrogen",1.008,"n",2.20,31,["nuoc","congnghe"],"Có trong nước H₂O; nhiên liệu sạch cho pin nhiên liệu, tên lửa.","Đốt H₂ chỉ tạo ra nước và toả rất nhiều nhiệt; H₂ là khí nhẹ nhất."],
+["He","Helium",4.003,"g",null,28,["congnghe","coth"],"Bơm bóng bay; làm lạnh nam châm siêu dẫn trong máy chụp MRI.","Lớp vỏ 1s² bão hoà nên He trơ, không cháy; nhẹ hơn không khí; hoá lỏng ở −269 °C."],
+["Li","Lithium",6.94,"m",0.98,128,["congnghe"],"Pin Li-ion của điện thoại, laptop, xe điện.","Kim loại nhẹ nhất, nhóm IA dễ nhường 1 e → tích trữ nhiều điện năng trên mỗi gam pin."],
+["Be","Beryllium",9.012,"m",1.57,96,["congnghe"],"Hợp kim đồng–beri làm lò xo, dụng cụ không phát tia lửa; cửa sổ ống tia X.","Nhẹ và cứng; nguyên tử nhỏ, ít electron nên tia X đi xuyên qua dễ dàng."],
+["B","Boron",10.81,"n",2.04,84,["congnghe"],"Thuỷ tinh borosilicate: cốc thí nghiệm, hộp thuỷ tinh dùng lò vi sóng.","B₂O₃ làm thuỷ tinh ít giãn nở khi nóng nên không nứt khi đổi nhiệt đột ngột."],
+["C","Carbon",12.01,"n",2.55,76,["cayxanh","coth"],"Bộ khung của mọi chất hữu cơ trong cơ thể; than, ruột bút chì (than chì), kim cương.","4 e lớp ngoài cùng → tạo 4 liên kết cộng hoá trị bền, nối thành mạch dài, vòng, nhánh."],
+["N","Nitrogen",14.01,"n",3.04,71,["cayxanh"],"Phân đạm (urea); khí N₂ bơm vào túi snack để giữ giòn.","N có trong protein của cây; N₂ có liên kết ba rất bền nên trơ, không làm thực phẩm bị oxi hoá."],
+["O","Oxygen",15.999,"n",3.44,66,["coth","nuoc"],"Hô hấp; bình oxygen y tế; đèn xì hàn cắt kim loại; sục khí ao nuôi tôm cá.","Độ âm điện lớn, nhóm VIA cần nhận 2 e → chất oxi hoá mạnh, “đốt” glucose để giải phóng năng lượng."],
+["F","Fluorine",19.00,"n",3.98,57,["coth","nuoc"],"Kem đánh răng chứa fluoride; lớp chống dính Teflon trên chảo.","F⁻ thay nhóm OH⁻ trong men răng tạo fluorapatite bền với acid; liên kết C–F rất bền."],
+["Ne","Neon",20.18,"g",null,58,["congnghe"],"Đèn neon quảng cáo ánh đỏ cam.","Khí hiếm trơ; khi phóng điện, electron bị kích thích rồi phát ra ánh sáng màu đặc trưng."],
+["Na","Sodium",22.99,"m",0.93,166,["coth"],"Muối ăn NaCl; nước muối sinh lí 0,9%; baking soda NaHCO₃; đèn đường ánh vàng.","Nhóm IA dễ nhường 1 e tạo Na⁺, ion giúp dẫn truyền tín hiệu thần kinh và giữ nước."],
+["Mg","Magnesium",24.31,"m",1.31,141,["cayxanh","congnghe"],"Diệp lục của lá cây; hợp kim nhẹ làm vỏ laptop, khung xe đạp; pháo hoa.","Ion Mg²⁺ nằm ở tâm phân tử diệp lục; Mg là kim loại rất nhẹ, cháy cho ánh sáng trắng chói."],
+["Al","Aluminium",26.98,"m",1.61,121,["dien","congtrinh"],"Vỏ lon, giấy bạc, khung cửa, dây điện cao thế.","Nhẹ, dẫn điện tốt; lớp Al₂O₃ mỏng và bền phủ ngoài bảo vệ nhôm không bị ăn mòn tiếp."],
+["Si","Silicon",28.09,"n",1.90,111,["congnghe","congtrinh"],"Chip máy tính, pin mặt trời; cát, thuỷ tinh, gạch men.","Nằm ở ranh giới kim loại – phi kim nên là chất bán dẫn, điều khiển được dòng điện."],
+["P","Phosphorus",30.97,"n",2.19,107,["cayxanh","coth"],"Phân lân; đầu que diêm; có trong DNA và ATP của tế bào.","Nhóm VA tạo nhóm phosphate PO₄³⁻ — thành phần của xương, DNA và phân tử năng lượng ATP."],
+["S","Sulfur",32.06,"n",2.58,105,["cayxanh","congnghe"],"Sản xuất H₂SO₄; lưu hoá cao su làm lốp xe; thuốc trừ nấm cho cây.","S tạo cầu nối –S–S– giữa các mạch cao su, làm lốp bền và đàn hồi."],
+["Cl","Chlorine",35.45,"n",3.16,102,["nuoc"],"Khử trùng nước máy, bể bơi; nước Javel; nhựa PVC làm ống nước.","Nhóm VIIA, 7 e lớp ngoài cùng → oxi hoá mạnh, phá huỷ vi khuẩn."],
+["Ar","Argon",39.95,"g",null,106,["congtrinh"],"Khí bảo vệ khi hàn kim loại; khí trong bóng đèn sợi đốt.","Khí hiếm trơ, bao quanh kim loại nóng chảy và ngăn oxygen làm gỉ mối hàn."],
+["K","Potassium",39.10,"m",0.82,203,["cayxanh","coth"],"Phân kali; chuối giàu K⁺ giúp điều hoà nhịp tim.","Nhóm IA tạo ion K⁺ — ion giữ cân bằng nước trong tế bào và truyền tín hiệu thần kinh."],
+["Ca","Calcium",40.08,"m",1.00,176,["congtrinh","coth"],"Xương, răng; vôi, xi măng, đá vôi; phấn viết bảng.","Ca²⁺ kết hợp phosphate/carbonate tạo chất rắn khó tan, cứng."],
+["Sc","Scandium",44.96,"m",1.36,170,["congnghe"],"Hợp kim nhôm–scandi làm khung xe đạp, gậy bóng chày.","Thêm một lượng nhỏ Sc giúp hợp kim nhôm bền hơn mà vẫn nhẹ."],
+["Ti","Titanium",47.87,"m",1.54,160,["coth","congnghe"],"Khớp háng nhân tạo, trụ cấy ghép răng, thân máy bay; TiO₂ trong kem chống nắng.","Bền, nhẹ, không gỉ và không gây phản ứng với cơ thể (tương thích sinh học)."],
+["V","Vanadium",50.94,"m",1.63,153,["congtrinh"],"Thép vanadi làm cờ lê, lò xo, trục xe.","Vài phần trăm V làm thép cứng và dai hơn."],
+["Cr","Chromium",52.00,"m",1.66,139,["congtrinh"],"Inox (thép không gỉ chứa ~18% Cr); mạ crom vòi nước sáng bóng.","Cr tạo lớp Cr₂O₃ siêu mỏng, bền, bảo vệ thép khỏi gỉ."],
+["Mn","Manganese",54.94,"m",1.55,139,["congnghe","congtrinh"],"Pin kiềm (MnO₂); thép mangan làm đường ray, máy nghiền.","Mn có nhiều số oxi hoá, MnO₂ nhận electron ở cực dương của pin."],
+["Fe","Iron",55.845,"m",1.83,132,["congtrinh","coth"],"Thép xây nhà, cầu; hemoglobin trong máu; lõi nam châm, động cơ.","Fe trộn C thành thép cứng và rẻ; Fe²⁺ trong hemoglobin gắn O₂."],
+["Co","Cobalt",58.93,"m",1.88,126,["coth","congnghe"],"Vitamin B12; cực pin Li-ion (LiCoO₂); màu xanh cobalt trên gốm sứ.","Co là nguyên tử trung tâm của vitamin B12, cần cho tạo hồng cầu."],
+["Ni","Nickel",58.69,"m",1.91,124,["congnghe"],"Đồng xu, mạ niken, pin Ni-MH, thành phần của inox.","Bền, chống ăn mòn và giữ độ sáng bề mặt."],
+["Cu","Copper",63.55,"m",1.90,132,["dien"],"Dây điện, mạch in, ống đồng máy điều hoà; đồng thau, trống đồng.","Dẫn điện tốt chỉ sau bạc, dễ kéo sợi, rẻ hơn bạc nhiều."],
+["Zn","Zinc",65.38,"m",1.65,122,["congtrinh","coth"],"Mạ kẽm tôn lợp, ống thép; vi chất kẽm tăng miễn dịch.","Zn hoạt động mạnh hơn Fe nên bị ăn mòn trước, bảo vệ lớp thép bên trong."],
+["Ga","Gallium",69.72,"m",1.81,122,["congnghe"],"Đèn LED xanh/trắng (GaN); chip sóng điện thoại (GaAs).","Hợp chất của Ga là bán dẫn phát sáng khi có dòng điện."],
+["Ge","Germanium",72.63,"m",2.01,120,["congnghe"],"Sợi cáp quang; thấu kính camera hồng ngoại đo thân nhiệt.","Ge là bán dẫn và trong suốt với tia hồng ngoại."],
+["As","Arsenic",74.92,"n",2.18,119,["nuoc"],"Cảnh báo: nước giếng khoan nhiễm asen ở đồng bằng sông Hồng; bán dẫn GaAs.","Hợp chất As rất độc, tích luỹ lâu dài gây bệnh → nước ngầm phải được lọc trước khi dùng."],
+["Se","Selenium",78.97,"n",2.55,120,["coth","congnghe"],"Vi chất chống oxi hoá trong cơ thể; trống quang máy photocopy.","Se dẫn điện tốt hơn khi được chiếu sáng (quang dẫn)."],
+["Br","Bromine",79.90,"n",2.96,120,["congnghe"],"Chất chống cháy trong vỏ nhựa đồ điện tử; thuốc ảnh cũ (AgBr).","Cùng nhóm VIIA với Cl; là phi kim duy nhất ở thể lỏng ở nhiệt độ phòng."],
+["Kr","Krypton",83.80,"g",null,116,["congnghe"],"Đèn flash chụp ảnh; khí giữa hai lớp kính cách nhiệt.","Khí hiếm trơ, nặng và dẫn nhiệt kém."]
+];
+
+const GROUP_VN = ["","IA","IIA","IIIB","IVB","VB","VIB","VIIB","VIIIB","VIIIB","VIIIB","IB","IIB","IIIA","IVA","VA","VIA","VIIA","VIIIA"];
+const CAT_VN = {m:"Kim loại", n:"Phi kim", g:"Khí hiếm"};
+
+function pos(z){
+  if(z===1) return [1,1]; if(z===2) return [1,18];
+  if(z<=10) return [2, z<=4 ? z-2 : z+8];
+  if(z<=18) return [3, z<=12 ? z-10 : z];
+  return [4, z-18];
+}
+const els = E.map((r,i)=>{const z=i+1; const [p,g]=pos(z);
+  return {z,sym:r[0],name:r[1],mass:r[2],cat:r[3],en:r[4],r:r[5],dom:r[6],app:r[7],why:r[8],p,g};});
+const bySym = Object.fromEntries(els.map(e=>[e.sym,e]));
+
+const vn = (x,d)=> d==null ? String(x).replace(".",",") : x.toFixed(d).replace(".",",");
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+const sup = n=>String(n).split("").map(c=>SUP[c]).join("");
+
+// Cấu hình electron (Cr, Cu là ngoại lệ)
+const FILL=[["1s",2],["2s",2],["2p",6],["3s",2],["3p",6],["4s",2],["3d",10],["4p",6]];
+const SHOW=["1s","2s","2p","3s","3p","3d","4s","4p"];
+function orbitals(z){
+  let rem=z; const o={};
+  for(const [k,c] of FILL){ if(rem<=0) break; const n=Math.min(c,rem); o[k]=n; rem-=n; }
+  if(z===24){o["3d"]=5;o["4s"]=1} if(z===29){o["3d"]=10;o["4s"]=1}
+  return o;
+}
+function config(z){const o=orbitals(z); return SHOW.filter(k=>o[k]).map(k=>k+sup(o[k])).join(" ");}
+function configShort(z){
+  const core = z>18?["[Ar]",18]: z>10?["[Ne]",10]: z>2?["[He]",2]:null;
+  if(!core) return config(z);
+  const o=orbitals(z), full=orbitals(core[1]);
+  return core[0]+" "+SHOW.filter(k=>o[k] && o[k]!==(full[k]||0)).map(k=>k+sup(o[k])).join(" ");
+}
+function shells(z){const o=orbitals(z); const s=[0,0,0,0]; for(const k in o) s[+k[0]-1]+=o[k]; return s.filter(x=>x);}
+
+const ION = {1:"⁺",2:"²⁺",3:"³⁺"};
+function posToProp(e){
+  const sh=shells(e.z), out=sh[sh.length-1];
+  let s=`Ô ${e.z} → hạt nhân có ${e.z} proton, vỏ có ${e.z} electron. Chu kì ${e.p} → có ${e.p} lớp electron. Nhóm ${GROUP_VN[e.g]} → `;
+  const g=e.g;
+  if(e.z===1) return s+"chỉ có 1 electron; H thường góp chung electron tạo liên kết cộng hoá trị (H₂O, CH₄) nên là phi kim, dù đứng ở nhóm IA.";
+  if(g===18) return s+(e.z===2?"lớp ngoài cùng có 2 e, đã bão hoà":"lớp ngoài cùng có 8 e")+" — cấu hình rất bền nên hầu như không tham gia phản ứng: khí hiếm.";
+  if(g>=3&&g<=12) return s+`kim loại chuyển tiếp (nhóm B): electron đang điền vào phân lớp 3d, lớp ngoài cùng chỉ có ${out} e → là kim loại, thường có nhiều số oxi hoá.`;
+  if(g===1) return s+`1 e lớp ngoài cùng → dễ nhường 1 e tạo ion ${e.sym}⁺ → kim loại kiềm, tính khử mạnh.`;
+  if(g===2) return s+`2 e lớp ngoài cùng → nhường 2 e tạo ion ${e.sym}²⁺ → kim loại.`;
+  if(g===13) return e.sym==="B" ? s+"3 e lớp ngoài cùng nhưng nguyên tử rất nhỏ, khó nhường electron → B là phi kim." : s+`3 e lớp ngoài cùng → thường nhường 3 e tạo ion ${e.sym}³⁺ → kim loại.`;
+  if(g===14) return s+"4 e lớp ngoài cùng → không dễ nhường hay nhận, thường góp chung 4 e tạo 4 liên kết"+(e.sym==="Ge"?"; ở chu kì 4 tính kim loại tăng nên Ge là chất bán dẫn mang tính kim loại.":(e.sym==="Si"?"; nằm sát ranh giới kim loại nên Si là chất bán dẫn.":"."));
+  if(g===15) return s+"5 e lớp ngoài cùng → có xu hướng nhận thêm 3 e hoặc góp chung electron → phi kim.";
+  if(g===16) return s+`6 e lớp ngoài cùng → có xu hướng nhận 2 e tạo ion ${e.sym}²⁻ → phi kim, tính oxi hoá khá mạnh.`;
+  if(g===17) return s+`7 e lớp ngoài cùng, chỉ thiếu 1 e → dễ nhận 1 e tạo ion ${e.sym}⁻ → phi kim mạnh nhất chu kì (halogen).`;
+}
+
+// 6 hồ sơ chi tiết
+const ICON = {
+ lungs:'<path d="M32 6v20M32 20l-5 7M32 20l5 7"/><path d="M27 24C17 18 9 31 9 45c0 8 6 10 12 8 5-2 6-8 6-16z"/><path d="M37 24c10-6 18 7 18 21 0 8-6 10-12 8-5-2-6-8-6-16z"/>',
+ salt:'<path d="M20 30h24v24a4 4 0 0 1-4 4H24a4 4 0 0 1-4-4z"/><path d="M21 30c0-12 22-12 22 0"/><circle cx="28" cy="23" r="1.4"/><circle cx="32" cy="21" r="1.4"/><circle cx="36" cy="23" r="1.4"/><path d="M26 12l1 2M32 8v3M38 12l-1 2"/>',
+ drop:'<path d="M32 6C24 20 15 29 15 40a17 17 0 0 0 34 0C49 29 40 20 32 6z"/><path d="M32 33v14M25 40h14"/>',
+ bone:'<g transform="rotate(-35 32 32)"><path d="M18 28h28v8H18z"/><circle cx="15" cy="27" r="5"/><circle cx="15" cy="37" r="5"/><circle cx="49" cy="27" r="5"/><circle cx="49" cy="37" r="5"/></g>',
+ bridge:'<path d="M4 46h56M8 46c10-22 38-22 48 0M16 46v-10M24 46v-15M32 46v-17M40 46v-15M48 46v-10M10 46v10M54 46v10"/>',
+ plug:'<path d="M26 6v10M38 6v10M20 16h24v10a12 12 0 0 1-24 0z"/><path d="M32 38v6c0 10 14 12 20 6"/>'
+};
+const PROFILES = {
+ O:{icon:"lungs", tag:"Khí của sự sống và sự cháy",
+  prop:["Khí không màu, không mùi, ít tan trong nước, nặng hơn không khí một chút.","Duy trì sự cháy và sự hô hấp.","Chất oxi hoá mạnh: tác dụng với hầu hết kim loại, phi kim. Ví dụ C + O₂ → CO₂; sắt gỉ 4Fe + 3O₂ + nH₂O → 2Fe₂O₃·nH₂O."],
+  use:["Hô hấp: tế bào dùng O₂ “đốt” glucose tạo năng lượng.","Y tế: bình oxygen cấp cứu, máy thở.","Công nghiệp: đèn xì oxygen–acetylene hàn cắt kim loại.","Nuôi trồng thuỷ sản: sục khí cho ao tôm cá."],
+  expl:"O ở chu kì 2 nên chỉ có 2 lớp electron, bán kính nhỏ (66 pm). Nhóm VIA cho biết O có 6 e lớp ngoài cùng, chỉ cần nhận thêm 2 e là đạt cấu hình bền của khí hiếm Ne. Bán kính nhỏ cộng với nhu cầu nhận electron làm O có độ âm điện 3,44, lớn thứ hai trong bảng (sau F). Vì hút electron rất mạnh nên O là chất oxi hoá mạnh: đó là lí do O₂ duy trì sự cháy và giúp tế bào giải phóng năng lượng từ thức ăn.",
+  exp:"Đưa que đóm còn tàn đỏ vào lọ chứa khí O₂ (điều chế bằng cách nhiệt phân KMnO₄): que đóm bùng cháy. Kết luận: O₂ duy trì sự cháy.",
+  safe:"Do giáo viên thực hiện; để xa chất dễ cháy.",
+  hook:"Nín thở 10 giây. Thứ em vừa thiếu chính là oxygen.",
+  quiz:[["Oxygen có vai trò gì trong hô hấp?",["Nhận electron để oxi hoá glucose, giải phóng năng lượng","Cung cấp electron cho tế bào","Là khí trơ, chỉ làm đầy phổi","Tạo ra glucose cho cơ thể"],0,"O₂ là chất oxi hoá: nó nhận electron khi glucose bị “đốt” thành CO₂ và H₂O, giải phóng năng lượng."],
+        ["Vì sao O có độ âm điện lớn?",["Có nhiều lớp electron","Bán kính nhỏ và chỉ thiếu 2 e để đạt cấu hình bền","Thuộc nhóm khí hiếm","Có nguyên tử khối lớn"],1,"Chu kì 2 → bán kính nhỏ; nhóm VIA → thiếu 2 e. Hai điều này làm O hút electron rất mạnh."]]},
+ Na:{icon:"salt", tag:"Kim loại trong lọ muối",
+  prop:["Kim loại màu trắng bạc, mềm (cắt được bằng dao), nhẹ hơn nước.","Rất hoạt động: tác dụng mãnh liệt với nước 2Na + 2H₂O → 2NaOH + H₂↑.","Bị oxi hoá nhanh trong không khí nên phải bảo quản trong dầu hoả."],
+  use:["Muối ăn NaCl và nước mắm.","Nước muối sinh lí NaCl 0,9% để súc miệng, rửa vết thương.","Baking soda NaHCO₃ làm bánh nở, giảm đau dạ dày.","Đèn hơi natri cho ánh vàng chiếu sáng đường phố."],
+  expl:"Na ở chu kì 3, nhóm IA: có 3 lớp electron và chỉ 1 electron ở lớp ngoài cùng (3s¹). Electron này ở xa hạt nhân và bị 10 electron lớp trong che chắn, nên bị hút rất yếu và dễ mất. Khi nhường 1 e, Na trở thành Na⁺ có cấu hình bền của Ne. Vì thế Na là kim loại mạnh, độ âm điện chỉ 0,93, phản ứng mạnh với nước, và trong tự nhiên chỉ tồn tại ở dạng hợp chất như NaCl.",
+  exp:"Xem video thả mẩu Na nhỏ vào chậu nước có vài giọt phenolphthalein: Na chạy tròn trên mặt nước, nóng chảy thành giọt, có khí thoát ra và nước chuyển hồng do tạo NaOH.",
+  safe:"Không tự làm: Na gây cháy nổ khi gặp nước. Chỉ xem video hoặc để giáo viên làm với mẩu bằng hạt đậu.",
+  hook:"Một kim loại nổ tung trong nước, nhưng em lại ăn nó mỗi ngày?",
+  quiz:[["Vì sao Na được bảo quản trong dầu hoả?",["Để Na không bị chảy","Na phản ứng mạnh với nước và oxygen trong không khí","Dầu hoả làm Na cứng hơn","Để Na không bay hơi"],1,"Na có 1 e lớp ngoài cùng rất dễ nhường nên phản ứng ngay với hơi nước và O₂. Dầu hoả ngăn Na tiếp xúc với không khí."],
+        ["Trong muối ăn, sodium tồn tại ở dạng nào?",["Nguyên tử Na","Ion Na⁻","Ion Na⁺","Phân tử Na₂"],2,"Na nhường 1 e cho Cl tạo Na⁺ và Cl⁻, hai ion hút nhau thành tinh thể NaCl."]]},
+ Cl:{icon:"drop", tag:"Người gác cổng của nước sạch",
+  prop:["Khí màu vàng lục, mùi xốc, rất độc, nặng hơn không khí.","Chất oxi hoá mạnh: tác dụng với kim loại 2Na + Cl₂ → 2NaCl.","Tan trong nước tạo HClO có tính tẩy màu, diệt khuẩn: Cl₂ + H₂O ⇌ HCl + HClO."],
+  use:["Khử trùng nước máy và nước bể bơi.","Nước Javel (NaClO) tẩy trắng, khử khuẩn.","Muối ăn NaCl.","Nhựa PVC làm ống nước, vỏ dây điện."],
+  expl:"Cl ở chu kì 3, nhóm VIIA: có 7 electron lớp ngoài cùng, chỉ thiếu 1 e là đạt cấu hình bền của Ar. So với các nguyên tố cùng chu kì, Cl đứng gần cuối nên bán kính nhỏ, hạt nhân hút electron mạnh, độ âm điện 3,16. Vì vậy Cl rất dễ nhận 1 e tạo Cl⁻, là phi kim mạnh nhất chu kì 3 và có tính oxi hoá mạnh. Chính tính oxi hoá này phá huỷ thành tế bào vi khuẩn, nên chlorine được dùng để khử trùng nước.",
+  exp:"Nhỏ vài giọt nước Javel lên mẩu vải màu hoặc cánh hoa: màu nhạt dần rồi mất. Kết luận: ClO⁻ có tính oxi hoá mạnh, tẩy màu.",
+  safe:"Đeo găng, làm nơi thoáng gió. Không bao giờ trộn Javel với chất tẩy rửa có acid vì sẽ sinh khí Cl₂ độc.",
+  hook:"Mùi “bể bơi” em ngửi thấy là dấu vết của một chất khí từng là vũ khí.",
+  quiz:[["Vì sao nước máy đôi khi có mùi “clo”?",["Do ống nước bị gỉ","Do chlorine được thêm vào để diệt khuẩn","Do nước có nhiều muối ăn","Do nước bị nhiễm phèn"],1,"Nhà máy nước thêm một lượng nhỏ Cl₂ để diệt vi khuẩn; phần dư còn lại tạo mùi đặc trưng."],
+        ["Nguyên tử Cl có xu hướng gì khi phản ứng?",["Nhường 7 e","Nhận 1 e tạo Cl⁻","Nhường 1 e tạo Cl⁺","Không phản ứng"],1,"7 e lớp ngoài cùng → nhận thêm 1 e là đủ 8 e."]]},
+ Ca:{icon:"bone", tag:"Từ khung xương đến khung nhà",
+  prop:["Kim loại màu trắng bạc, nhẹ, khá hoạt động.","Tác dụng với nước ở nhiệt độ thường: Ca + 2H₂O → Ca(OH)₂ + H₂↑.","Hợp chất quan trọng: CaCO₃ (đá vôi, vỏ sò), CaO (vôi sống), Ca(OH)₂ (vôi tôi)."],
+  use:["Xương và răng: khoảng 99% canxi trong cơ thể nằm ở đây.","Xây dựng: đá vôi, vôi, xi măng.","Phấn viết bảng (CaCO₃, CaSO₄).","Sữa, thuốc bổ sung canxi."],
+  expl:"Ca ở chu kì 4, nhóm IIA: có 4 lớp electron, 2 electron lớp ngoài cùng (4s²). Hai electron này ở xa hạt nhân nên dễ nhường, tạo ion Ca²⁺ — Ca là kim loại khá mạnh (độ âm điện 1,00). Ion Ca²⁺ mang điện tích +2 hút mạnh các ion âm như PO₄³⁻ và CO₃²⁻, tạo ra những chất rắn cứng, khó tan: hydroxyapatite trong xương, răng và CaCO₃ trong đá vôi. Cùng một quy luật giải thích cả khung xương lẫn khung nhà.",
+  exp:"Thả vỏ trứng vào cốc giấm ăn: bọt khí sủi lên ngay; sau 1–2 ngày vỏ tan hết, chỉ còn lớp màng mềm. CaCO₃ + 2CH₃COOH → (CH₃COO)₂Ca + CO₂↑ + H₂O.",
+  safe:"An toàn, có thể làm tại nhà.",
+  hook:"Xương em và bức tường lớp học có chung một nguyên tố.",
+  quiz:[["Chất chính trong vỏ trứng là gì?",["CaO","CaCO₃","Ca(OH)₂","CaCl₂"],1,"Vỏ trứng, vỏ sò, đá vôi đều chủ yếu là CaCO₃, nên sủi bọt CO₂ khi gặp giấm."],
+        ["Ca nhường bao nhiêu electron để tạo ion?",["1","2","3","4"],1,"Nhóm IIA → 2 e lớp ngoài cùng → ion Ca²⁺."]]},
+ Fe:{icon:"bridge", tag:"Thép của công trình, máu của cơ thể",
+  prop:["Kim loại màu trắng hơi xám, dẻo, dẫn điện và nhiệt tốt, bị nam châm hút.","Tác dụng với acid: Fe + 2HCl → FeCl₂ + H₂↑.","Bị gỉ trong không khí ẩm, tạo gỉ sắt Fe₂O₃·nH₂O màu nâu đỏ."],
+  use:["Thép xây dựng: cốt thép, dầm cầu, khung nhà.","Hemoglobin trong hồng cầu vận chuyển O₂.","Lõi nam châm điện, động cơ, máy biến áp.","Viên sắt bổ sung cho người thiếu máu."],
+  expl:"Fe ở chu kì 4, nhóm VIIIB: là kim loại chuyển tiếp, electron cuối điền vào phân lớp 3d (cấu hình [Ar] 3d⁶ 4s²). Lớp ngoài cùng chỉ có 2 e nên Fe là kim loại, nhưng Fe còn có thể nhường thêm electron 3d, tạo cả Fe²⁺ và Fe³⁺. Nhờ chuyển qua lại giữa các số oxi hoá, Fe trong hemoglobin gắn O₂ ở phổi rồi nhả ra ở mô. Cũng vì dễ bị oxi hoá mà sắt dễ gỉ, nên thép phải được sơn, mạ kẽm hoặc trộn Cr thành inox.",
+  exp:"Ba ống nghiệm có đinh sắt: (1) khô, có gói hút ẩm; (2) ngập nước đã đun sôi, phủ lớp dầu; (3) ngập một nửa trong nước muối. Sau 3–5 ngày, ống (3) gỉ nhiều nhất. Kết luận: sắt gỉ khi có cả oxygen và nước; muối làm gỉ nhanh hơn.",
+  safe:"An toàn; rửa tay sau khi chạm vào gỉ sắt.",
+  hook:"Cây cầu thép và giọt máu của em có chung một thứ: sắt.",
+  quiz:[["Sắt trong máu nằm ở đâu?",["Huyết tương","Hemoglobin của hồng cầu","Tiểu cầu","Bạch cầu"],1,"Mỗi phân tử hemoglobin có 4 ion Fe²⁺, mỗi ion gắn được một phân tử O₂."],
+        ["Sắt bị gỉ khi nào?",["Chỉ cần có nước","Chỉ cần có oxygen","Có cả oxygen và nước","Khi bị nung nóng"],2,"Thí nghiệm 3 ống nghiệm cho thấy thiếu một trong hai thì đinh hầu như không gỉ."]]},
+ Cu:{icon:"plug", tag:"Đường đi của dòng điện",
+  prop:["Kim loại màu đỏ, rất dẻo, dễ kéo sợi và dát mỏng.","Dẫn điện tốt thứ hai sau bạc.","Kém hoạt động: không tác dụng với HCl loãng; để lâu trong không khí ẩm tạo lớp gỉ đồng màu xanh."],
+  use:["Dây điện, cuộn dây động cơ, mạch in.","Ống đồng trong máy điều hoà, tủ lạnh.","Đồng thau (Cu–Zn) làm chìa khoá, kèn; đồng thiếc làm trống đồng Đông Sơn.","Kháng khuẩn: tay nắm cửa bằng đồng."],
+  expl:"Cu ở chu kì 4, nhóm IB, là kim loại chuyển tiếp với cấu hình đặc biệt [Ar] 3d¹⁰ 4s¹: phân lớp 3d bão hoà, lớp ngoài cùng chỉ còn 1 electron. Electron 4s¹ này bị giữ lỏng lẻo nên di chuyển tự do giữa các nguyên tử trong mạng kim loại, làm Cu dẫn điện rất tốt. Phân lớp 3d¹⁰ bền vững khiến Cu kém hoạt động hơn Fe nên ít bị ăn mòn, dây điện dùng được nhiều năm.",
+  exp:"Ngâm đinh sắt đã đánh sạch vào dung dịch CuSO₄ màu xanh: sau vài phút đinh được phủ lớp đồng đỏ, dung dịch nhạt màu. Fe + CuSO₄ → FeSO₄ + Cu. Kết luận: Fe hoạt động mạnh hơn Cu.",
+  safe:"Đeo găng; CuSO₄ độc khi nuốt phải.",
+  hook:"Mỗi lần em bật công tắc, dòng điện đi trên một con đường bằng đồng.",
+  quiz:[["Vì sao dây điện thường làm bằng đồng?",["Đồng rẻ nhất trong các kim loại","Đồng dẫn điện tốt, dễ kéo sợi và bền","Đồng nhẹ nhất","Đồng có từ tính"],1,"Bạc dẫn điện tốt hơn một chút nhưng quá đắt; đồng cân bằng giữa dẫn điện, độ dẻo và giá thành."],
+        ["Phản ứng Fe + CuSO₄ → FeSO₄ + Cu chứng tỏ điều gì?",["Cu hoạt động mạnh hơn Fe","Fe hoạt động mạnh hơn Cu","Hai kim loại như nhau","CuSO₄ là acid"],1,"Kim loại mạnh hơn đẩy kim loại yếu hơn ra khỏi dung dịch muối."]]}
+};
+const PROF_ORDER=["O","Na","Cl","Ca","Fe","Cu"];
+
+const VI = {H:"hiđro",He:"heli",Li:"liti",C:"cacbon",N:"nitơ",O:"oxi",F:"flo",Na:"natri",Mg:"magie",Al:"nhôm",Si:"silic",P:"photpho",S:"lưu huỳnh",Cl:"clo",K:"kali",Ca:"canxi",Cr:"crom",Mn:"mangan",Fe:"sắt",Co:"coban",Ni:"niken",Cu:"đồng",Zn:"kẽm",As:"asen",Br:"brom"};
+const blockOf = e => (e.z===2||e.g<=2) ? "s" : (e.g<=12 ? "d" : "p");
+const BLOCK_VN = {s:"Nguyên tố s", p:"Nguyên tố p", d:"Nguyên tố d"};
+const fillOf = (e,m) => m==="block" ? `var(--${blockOf(e)})` : ({m:"var(--metal)",n:"var(--nonmetal)",g:"var(--noble)"})[e.cat];
+const fullName = e => e.name + (VI[e.sym] && VI[e.sym].toLowerCase()!==e.name.toLowerCase() ? ` (${VI[e.sym]})` : "");
+
+/* ---------- Tiến độ khám phá ---------- */
+let seen = new Set();
+try{ seen = new Set(JSON.parse(localStorage.getItem("ptdx-seen")||"[]")); }catch(err){}
+function markSeen(sym){
+  seen.add(sym);
+  try{ localStorage.setItem("ptdx-seen", JSON.stringify([...seen])); }catch(err){}
+  document.getElementById("seen-n").textContent = seen.size;
+  document.getElementById("seen-bar").style.width = (seen.size/36*100)+"%";
+  const b = tbl.querySelector(`.el[data-sym="${sym}"]`);
+  if(b && !b.querySelector(".seen")) b.insertAdjacentHTML("beforeend",'<i class="seen" aria-hidden="true"></i>');
+}
+
+/* ---------- Bảng ---------- */
+const tbl = document.getElementById("ptable");
+let mode = "block", domSel = null, cur = "Fe";
+(function build(){
+  let h = "";
+  for(let g=1; g<=18; g++) h += `<div class="glabel" style="grid-column:${g};grid-row:1">${GROUP_VN[g]}</div>`;
+  h += `<div class="keycell"><div class="keybig"><div class="z">8</div><div class="s">O</div><div class="nm">Oxygen</div></div>
+    <ul class="keylist"><li><b>8</b> số hiệu nguyên tử Z = số proton</li><li><b>O</b> kí hiệu hoá học</li><li>Hàng ngang = <b>chu kì</b> = số lớp e</li><li>Cột = <b>nhóm</b> · ★ có thí nghiệm</li></ul></div>`;
+  for(const e of els) h += `<button class="el" id="el-${e.sym}" data-sym="${e.sym}" style="grid-column:${e.g};grid-row:${e.p+1}" title="${fullName(e)}" aria-label="${fullName(e)}, Z = ${e.z}">
+    <span class="z">${e.z}</span><span class="s">${e.sym}</span><span class="v"></span>${PROFILES[e.sym]?'<span class="star" aria-hidden="true">★</span>':""}</button>`;
+  tbl.innerHTML = h;
+})();
+tbl.addEventListener("click", ev => { const b = ev.target.closest(".el"); if(b) select(b.dataset.sym, {scroll: matchMedia("(max-width:980px)").matches}); });
+document.getElementById("colorby").addEventListener("change", ev => { mode = ev.target.value; if(mode!=="life") domSel = null; render(); });
+
+const chips = document.getElementById("domchips");
+chips.innerHTML = Object.entries(DOM).map(([k,v]) => `<button class="chip" id="dom-${k}" data-d="${k}" aria-pressed="false">${v}<span class="n">${els.filter(e=>e.dom.includes(k)).length}</span></button>`).join("");
+chips.addEventListener("click", ev => { const b = ev.target.closest(".chip"); if(!b) return; domSel = domSel===b.dataset.d ? null : b.dataset.d; render(); });
+
+const RULES = {
+  block:"Khối được đặt tên theo phân lớp chứa electron cuối cùng: <b>s</b> (nhóm IA, IIA và He), <b>p</b> (nhóm IIIA → VIIIA), <b>d</b> (kim loại chuyển tiếp, nhóm B).",
+  cat:"Kim loại nằm bên trái và giữa bảng, phi kim ở góc trên bên phải, khí hiếm ở cột cuối. Đường ranh giới chạy chéo qua B, Si, Ge, As.",
+  life:"Chọn một lĩnh vực để xem những nguyên tố có mặt ở đó, rồi bấm vào ô để đọc <mark>vì sao</mark> nguyên tố ấy đảm nhận vai trò đó.",
+  en:"<b>Độ âm điện</b> (thang Pauling) đo khả năng hút electron. Màu đậm dần từ trái sang phải trong một chu kì, nhạt dần từ trên xuống trong một nhóm A. Khí hiếm (để trắng) không xét.",
+  r:"<b>Bán kính nguyên tử</b> (pm): màu đậm là nguyên tử lớn. K lớn nhất (203 pm) vì mở đầu chu kì 4 với 4 lớp electron; bán kính giảm dần dọc mỗi chu kì."
+};
+function render(){
+  const heat = mode==="en"||mode==="r";
+  const vals = mode==="en" ? els.map(e=>e.en).filter(v=>v!=null) : els.map(e=>e.r);
+  const lo = Math.min(...vals), hi = Math.max(...vals);
+  for(const b of tbl.querySelectorAll(".el")){
+    const e = bySym[b.dataset.sym], v = b.querySelector(".v");
+    b.classList.toggle("dim", mode==="life" && !!domSel && !e.dom.includes(domSel));
+    if(heat){
+      const x = mode==="en" ? e.en : e.r;
+      if(x==null){ b.style.background="var(--surface)"; b.style.outline="1px dashed var(--hair)"; v.textContent="—"; }
+      else { const t=(x-lo)/(hi-lo); b.style.outline=""; b.style.background=`color-mix(in oklab, var(--purple) ${Math.round(4+t*58)}%, #fff)`; v.textContent = mode==="en" ? vn(x,2) : x; }
+    } else { b.style.outline=""; b.style.background = fillOf(e, mode==="life"?"cat":mode); v.textContent=""; }
+  }
+  chips.hidden = mode!=="life";
+  chips.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.d===domSel));
+  const lg = document.getElementById("legend");
+  if(mode==="block") lg.innerHTML = ["s","p","d"].map(k=>`<span><i style="background:var(--${k})"></i>${BLOCK_VN[k]}</span>`).join("");
+  else if(mode==="cat"||mode==="life") lg.innerHTML = `<span><i style="background:var(--metal)"></i>Kim loại</span><span><i style="background:var(--nonmetal)"></i>Phi kim</span><span><i style="background:var(--noble)"></i>Khí hiếm</span>`;
+  else lg.innerHTML = `<span class="mono">${mode==="en"?vn(lo,2):lo+" pm"}</span><span class="gradbar"></span><span class="mono">${mode==="en"?vn(hi,2):hi+" pm"}</span>`;
+  const r = document.getElementById("rule"); r.hidden = false; r.innerHTML = RULES[mode];
+}
+
+/* ---------- Mô hình nguyên tử ---------- */
+function bohr(e, size=250){
+  const sh = shells(e.z), c = size/2, r0 = 30, gap = (c-r0-10)/sh.length;
+  let s = `<svg viewBox="0 0 ${size} ${size}" role="img" aria-label="Mô hình nguyên tử ${e.name}: các lớp ${sh.join(", ")}">`;
+  sh.forEach((n,i) => {
+    const r = r0 + gap*(i+1) - 4, outer = i===sh.length-1;
+    s += `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#E2C6D4" stroke-width="1.2"/>`;
+    s += `<g class="shell" style="animation-duration:${14+i*7}s${i%2?";animation-direction:reverse":""}">`;
+    for(let k=0;k<n;k++){ const a = 2*Math.PI*k/n - Math.PI/2; s += `<circle cx="${(c+r*Math.cos(a)).toFixed(2)}" cy="${(c+r*Math.sin(a)).toFixed(2)}" r="4.2" fill="${outer?"var(--hot)":"var(--purple)"}"/>`; }
+    s += `</g>`;
+  });
+  s += `<circle cx="${c}" cy="${c}" r="${r0-6}" fill="var(--nucleus)"/><text x="${c}" y="${c+5}" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="14" fill="#fff">+${e.z}</text></svg>`;
+  return `<div class="bohr">${s}<div class="cap">Lớp: ${sh.join(" · ")} · <span style="color:var(--hot)">●</span> e lớp ngoài cùng</div></div>`;
+}
+
+/* ---------- QR ---------- */
+function linkFor(sym){ return (SITE_URL || location.href).split("#")[0] + "#" + sym; }
+function qrSVG(sym){
+  try{ const q = qrcode(0,"M"); q.addData(linkFor(sym)); q.make(); return q.createSvgTag({cellSize:3, margin:0, scalable:true}); }
+  catch(err){ return `<span class="mono" style="font-size:11px">QR</span>`; }
+}
+
+/* ---------- Câu hỏi ---------- */
+function seeded(n){ let s = n*9301+49297; return () => { s = (s*9301+49297)%233280; return s/233280; }; }
+function autoQuiz(e){
+  const right = GROUP_VN[e.g], rnd = seeded(e.z);
+  const pool = [...new Set(GROUP_VN.slice(1))].filter(g => g!==right);
+  const opts = [right]; while(opts.length<4){ const g = pool[Math.floor(rnd()*pool.length)]; if(!opts.includes(g)) opts.push(g); }
+  opts.sort(() => rnd()-.5);
+  return [`${e.name} (Z = ${e.z}) thuộc nhóm nào?`, opts, opts.indexOf(right), `Cấu hình ${config(e.z)} → ${shells(e.z).length} lớp e (chu kì ${e.p}), nhóm ${right}.`];
+}
+function quizHTML(list, key){
+  return list.map((q,i) => `<div class="quiz" data-ans="${q[2]}"><div class="qt">${q[0]}</div><div class="opts">${q[1].map((o,j) => `<button class="opt" id="q-${key}-${i}-${j}" data-j="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb" hidden></div><template>${q[3]}</template></div>`).join("");
+}
+document.addEventListener("click", ev => {
+  const b = ev.target.closest(".opt"); if(!b) return;
+  const box = b.closest(".quiz"), ans = +box.dataset.ans, j = +b.dataset.j;
+  box.querySelectorAll(".opt").forEach(o => { o.disabled = true; if(+o.dataset.j===ans) o.classList.add("ok"); });
+  if(j!==ans) b.classList.add("no");
+  const fb = box.querySelector(".fb"); fb.hidden = false;
+  fb.innerHTML = (j===ans ? `<b style="color:var(--good)">Chính xác!</b> ` : `<b style="color:var(--bad)">Chưa đúng.</b> `) + box.querySelector("template").innerHTML;
+});
+
+/* ---------- Khung ứng dụng nguyên tố ---------- */
+const DOM_ICON = {
+  nuoc: ICON.drop, dien: ICON.plug, congtrinh: ICON.bridge, coth: ICON.lungs,
+  congnghe: '<rect x="19" y="6" width="26" height="52" rx="5"/><path d="M28 50h8M25 14h14"/>',
+  cayxanh: '<path d="M14 52C14 27 30 12 53 12c0 25-15 40-39 40z"/><path d="M14 52l22-22"/>'
+};
+const info = document.getElementById("info");
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+function tile(e){ return `<div class="bigtile" style="--c:${fillOf(e,"block")}"><div class="z">${e.z}</div><div class="s">${e.sym}</div><div class="nm">${e.name}</div><div class="v">${vn(e.mass)}</div></div>`; }
+function select(sym, opts={}){
+  const e = bySym[sym]; if(!e) return; cur = sym;
+  tbl.querySelectorAll(".el.sel").forEach(x => x.classList.remove("sel"));
+  document.getElementById("el-"+sym).classList.add("sel");
+  const P = PROFILES[sym], prev = els[(e.z+34)%36], next = els[e.z%36];
+  const uses = P ? P.use : e.app.replace(/\.$/,"").split("; ").map(cap);
+  const video = "https://www.youtube.com/results?search_query=" + encodeURIComponent(`${e.name} ${VI[e.sym]||""} ứng dụng hoá học`);
+  info.innerHTML = `
+    <div class="info-head">${tile(e)}<div style="min-width:0"><h3>${fullName(e)}</h3>
+      <div class="cat">${CAT_VN[e.cat]} · Ô ${e.z} · Chu kì ${e.p} · Nhóm ${GROUP_VN[e.g]}</div>${P?`<div class="tagline">${P.tag}</div>`:""}</div></div>
+
+    <div class="blk"><h4><span class="n">1</span>Hình ảnh ứng dụng</h4>
+      <div class="pics">${e.dom.map(d=>`<div class="pic"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${DOM_ICON[d]}</svg><span>${DOM[d]}</span></div>`).join("")}</div>
+      <ul class="uses">${uses.map(u=>`<li>${u}</li>`).join("")}</ul>
+      <p class="why"><mark>Vì sao?</mark> ${e.why}</p></div>
+
+    <div class="blk"><h4><span class="n">2</span>Video 30–60 giây</h4>
+      <a class="btn sm" href="${video}" target="_blank" rel="noopener">▶ Xem video về ${e.name}</a></div>
+
+    <div class="blk"><h4><span class="n">3</span>Mô hình nguyên tử</h4>${bohr(e)}
+      <dl class="facts">
+        <div><dt>Nguyên tử khối</dt><dd>${vn(e.mass)}</dd></div>
+        <div class="cfg"><dt>Cấu hình electron</dt><dd>${config(e.z)}${e.z>2?`<br><span style="color:var(--muted)">${configShort(e.z)}</span>`:""}</dd></div>
+      </dl>
+      <p class="why" style="margin-top:8px">${posToProp(e)}</p></div>
+
+    ${P?`<div class="blk"><h4><span class="n">4</span>Thí nghiệm</h4><p>${P.exp}</p><p class="safety">${P.safe}</p></div>`:""}
+
+    <div class="blk"><h4><span class="n">${P?5:4}</span>Câu hỏi tương tác</h4>${quizHTML([P?P.quiz[0]:autoQuiz(e)], "i"+e.sym)}</div>
+
+    <div class="qrrow"><div class="qr">${qrSVG(e.sym)}</div><p>Quét mã QR để mở ${e.name} trên điện thoại. In mã và dán cạnh ô ${e.z} trên bảng.</p></div>
+    <div class="info-nav">
+      <button class="btn sm" id="info-prev">← ${prev.sym}</button>
+      <button class="btn sm" id="info-next">${next.sym} →</button>
+    </div>`;
+  info.querySelector("#info-prev").onclick = () => select(prev.sym);
+  info.querySelector("#info-next").onclick = () => select(next.sym);
+  info.scrollTop = 0;
+  markSeen(sym);
+  if(!opts.quiet) try{ history.replaceState(null, "", "#"+sym); }catch(err){}
+  if(opts.scroll) document.getElementById("side").scrollIntoView({behavior:"smooth", block:"start"});
+}
+document.addEventListener("keydown", ev => {
+  if(ev.target.closest("input,select,textarea")) return;
+  const e = bySym[cur];
+  if(ev.key==="ArrowRight") select(els[e.z%36].sym);
+  if(ev.key==="ArrowLeft") select(els[(e.z+34)%36].sym);
+});
+
+
+/* ---------- Khởi động ---------- */
+seen.forEach(s => { if(bySym[s]) markSeen(s); });
+render();
+const start = location.hash.slice(1);
+if(bySym[start]) select(start, {quiet:true, scroll:true}); else select("Fe", {quiet:true});
+window.addEventListener("hashchange", () => { const s = location.hash.slice(1); if(bySym[s] && s!==cur) select(s, {quiet:true, scroll:true}); });
+</script>
